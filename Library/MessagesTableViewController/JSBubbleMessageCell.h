@@ -56,6 +56,9 @@ typedef enum {
 #pragma mark - Message cell
 - (void)setMessage:(NSString *)msg;
 - (void)setMedia:(id)data;
+// voice
+- (void)setSpeech:(id)data;
+- (id)getSpeech;
 - (void)setTimestamp:(NSDate *)date;
 - (void)setAvatarImage:(UIImage *)image;
 - (void)setSender:(NSString *)sender;

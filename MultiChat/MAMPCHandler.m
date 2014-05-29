@@ -531,4 +531,99 @@
     return mamessage;
 }
 
+//////////////////////////////////////////////////////////////////////
+- (MAMessage *)sendMessageWithImage:(UIImage *)image
+{
+    [self.theLock lock];
+    
+    JSMessage *message = [[JSMessage alloc] init];
+    message.image = image;
+    message.sender = [self.peerID.peerID displayName];
+    message.messageType = JSBubbleMessageTypeOutgoing;
+    message.mediaType = JSBubbleMediaTypeImage;
+    message.messageStyle = JSBubbleMessageStyleFlat;
+    message.timestamp = [NSDate date];
+    
+    MAMessage *mamessage = [[MAMessage alloc] init];
+    mamessage.jsmessage = message;
+    mamessage.senderUid = self.peerID.uid;
+    mamessage.receiverUid = @"";
+    
+    
+    NSMutableArray *messageArray = [self.messages objectForKey:mamessage.senderUid];
+    if (messageArray == nil)
+    {
+        messageArray = [[NSMutableArray alloc] init];
+        [messageArray addObject:mamessage];
+        [self.messages setObject:messageArray forKey:mamessage.senderUid];
+    }
+    else
+    {
+        [messageArray addObject:message];
+    }
+    
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mamessage];
+    NSError *error = nil;
+    if (![self.session sendData:data
+                        toPeers:self.session.connectedPeers
+                       withMode:MCSessionSendDataReliable
+                          error:&error]) {
+        NSLog(@"[Error] %@", error);
+    }
+    
+    [self.theLock unlock];
+    
+    
+    return mamessage;
+}
+
+
+//////////////////////////////////////////////////////////////////////
+- (MAMessage *)sendMessageWithSpeech:(NSData *)speech
+{
+    [self.theLock lock];
+    
+    JSMessage *message = [[JSMessage alloc] init];
+    message.text = @"  (((....";
+    message.speech = speech;
+    message.sender = [self.peerID.peerID displayName];
+    message.messageType = JSBubbleMessageTypeOutgoing;
+    message.mediaType = JSBubbleMediaTypeSpeech;
+    message.messageStyle = JSBubbleMessageStyleFlat;
+    message.timestamp = [NSDate date];
+    
+    MAMessage *mamessage = [[MAMessage alloc] init];
+    mamessage.jsmessage = message;
+    mamessage.senderUid = self.peerID.uid;
+    mamessage.receiverUid = @"";
+    
+    
+    NSMutableArray *messageArray = [self.messages objectForKey:mamessage.senderUid];
+    if (messageArray == nil)
+    {
+        messageArray = [[NSMutableArray alloc] init];
+        [messageArray addObject:mamessage];
+        [self.messages setObject:messageArray forKey:mamessage.senderUid];
+    }
+    else
+    {
+        [messageArray addObject:message];
+    }
+    
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mamessage];
+    NSError *error = nil;
+    if (![self.session sendData:data
+                        toPeers:self.session.connectedPeers
+                       withMode:MCSessionSendDataReliable
+                          error:&error]) {
+        NSLog(@"[Error] %@", error);
+    }
+    
+    [self.theLock unlock];
+    
+    
+    return mamessage;
+}
+
+
 @end

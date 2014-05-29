@@ -14,6 +14,16 @@
 		D36EE406193200D70052213D /* MAUIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D36EE405193200D70052213D /* MAUIManager.m */; };
 		D3856E1D192F4F430086E9E5 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = D3856E1B192F4F430086E9E5 /* iTunesArtwork */; };
 		D3856E1E192F4F430086E9E5 /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = D3856E1C192F4F430086E9E5 /* iTunesArtwork@2x */; };
+		D3A8CB1D1936BEF7000CBC32 /* VoiceIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB1B1936BEF7000CBC32 /* VoiceIcon.png */; };
+		D3A8CB1E1936BEF7000CBC32 /* VoiceIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB1C1936BEF7000CBC32 /* VoiceIcon@2x.png */; };
+		D3A8CB281936BF26000CBC32 /* black_bg_ip5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB201936BF26000CBC32 /* black_bg_ip5@2x.png */; };
+		D3A8CB291936BF26000CBC32 /* LCVoice.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A8CB221936BF26000CBC32 /* LCVoice.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D3A8CB2A1936BF26000CBC32 /* LCVoiceHud.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A8CB241936BF26000CBC32 /* LCVoiceHud.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D3A8CB2B1936BF26000CBC32 /* mic_normal_358x358@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB251936BF26000CBC32 /* mic_normal_358x358@2x.png */; };
+		D3A8CB2C1936BF26000CBC32 /* mic_talk_358x358@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB261936BF26000CBC32 /* mic_talk_358x358@2x.png */; };
+		D3A8CB2D1936BF26000CBC32 /* wave70x117@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB271936BF26000CBC32 /* wave70x117@2x.png */; };
+		D3A8CB301936BF8E000CBC32 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A8CB2F1936BF8E000CBC32 /* AVFoundation.framework */; };
+		D3A8CB321936BFA6000CBC32 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A8CB311936BFA6000CBC32 /* QuartzCore.framework */; };
 		D3E6E99E193462500044F420 /* MAPeerID.m in Sources */ = {isa = PBXBuildFile; fileRef = D3E6E99D193462500044F420 /* MAPeerID.m */; };
 		D3FC8AAB192C44FF007519E2 /* MAChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC8AAA192C44FF007519E2 /* MAChatViewController.m */; };
 		D3FC9E51192C14520063A94D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FC9E50192C14520063A94D /* Foundation.framework */; };
@@ -126,6 +136,18 @@
 		D36EE405193200D70052213D /* MAUIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAUIManager.m; sourceTree = "<group>"; };
 		D3856E1B192F4F430086E9E5 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		D3856E1C192F4F430086E9E5 /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
+		D3A8CB1B1936BEF7000CBC32 /* VoiceIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VoiceIcon.png; sourceTree = "<group>"; };
+		D3A8CB1C1936BEF7000CBC32 /* VoiceIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VoiceIcon@2x.png"; sourceTree = "<group>"; };
+		D3A8CB201936BF26000CBC32 /* black_bg_ip5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black_bg_ip5@2x.png"; sourceTree = "<group>"; };
+		D3A8CB211936BF26000CBC32 /* LCVoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCVoice.h; sourceTree = "<group>"; };
+		D3A8CB221936BF26000CBC32 /* LCVoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCVoice.m; sourceTree = "<group>"; };
+		D3A8CB231936BF26000CBC32 /* LCVoiceHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCVoiceHud.h; sourceTree = "<group>"; };
+		D3A8CB241936BF26000CBC32 /* LCVoiceHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCVoiceHud.m; sourceTree = "<group>"; };
+		D3A8CB251936BF26000CBC32 /* mic_normal_358x358@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mic_normal_358x358@2x.png"; sourceTree = "<group>"; };
+		D3A8CB261936BF26000CBC32 /* mic_talk_358x358@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mic_talk_358x358@2x.png"; sourceTree = "<group>"; };
+		D3A8CB271936BF26000CBC32 /* wave70x117@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wave70x117@2x.png"; sourceTree = "<group>"; };
+		D3A8CB2F1936BF8E000CBC32 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D3A8CB311936BFA6000CBC32 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D3E6E99C193462500044F420 /* MAPeerID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAPeerID.h; sourceTree = "<group>"; };
 		D3E6E99D193462500044F420 /* MAPeerID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAPeerID.m; sourceTree = "<group>"; };
 		D3FC8AA9192C44FF007519E2 /* MAChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAChatViewController.h; sourceTree = "<group>"; };
@@ -254,6 +276,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3A8CB321936BFA6000CBC32 /* QuartzCore.framework in Frameworks */,
+				D3A8CB301936BF8E000CBC32 /* AVFoundation.framework in Frameworks */,
 				D3FC9E89192C146A0063A94D /* CoreBluetooth.framework in Frameworks */,
 				D3FC9E53192C14520063A94D /* CoreGraphics.framework in Frameworks */,
 				D3FC9E55192C14520063A94D /* UIKit.framework in Frameworks */,
@@ -274,6 +298,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D3A8CB1F1936BF26000CBC32 /* SoundRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				D3A8CB2E1936BF2D000CBC32 /* Resource */,
+				D3A8CB211936BF26000CBC32 /* LCVoice.h */,
+				D3A8CB221936BF26000CBC32 /* LCVoice.m */,
+				D3A8CB231936BF26000CBC32 /* LCVoiceHud.h */,
+				D3A8CB241936BF26000CBC32 /* LCVoiceHud.m */,
+			);
+			name = SoundRecorder;
+			path = Library/SoundRecorder;
+			sourceTree = "<group>";
+		};
+		D3A8CB2E1936BF2D000CBC32 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				D3A8CB201936BF26000CBC32 /* black_bg_ip5@2x.png */,
+				D3A8CB251936BF26000CBC32 /* mic_normal_358x358@2x.png */,
+				D3A8CB261936BF26000CBC32 /* mic_talk_358x358@2x.png */,
+				D3A8CB271936BF26000CBC32 /* wave70x117@2x.png */,
+			);
+			name = Resource;
+			sourceTree = "<group>";
+		};
 		D3FC9E44192C14520063A94D = {
 			isa = PBXGroup;
 			children = (
@@ -297,6 +345,8 @@
 		D3FC9E4F192C14520063A94D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D3A8CB311936BFA6000CBC32 /* QuartzCore.framework */,
+				D3A8CB2F1936BF8E000CBC32 /* AVFoundation.framework */,
 				D3FC9E88192C146A0063A94D /* CoreBluetooth.framework */,
 				D3FC9E50192C14520063A94D /* Foundation.framework */,
 				D3FC9E52192C14520063A94D /* CoreGraphics.framework */,
@@ -369,6 +419,7 @@
 		D3FC9E8A192C15580063A94D /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				D3A8CB1F1936BF26000CBC32 /* SoundRecorder */,
 				D3FE1465192E095C00563C4E /* MessagesTableViewController */,
 				D3FC9E8B192C157B0063A94D /* Masonry */,
 			);
@@ -453,6 +504,8 @@
 		D3FE1479192E095C00563C4E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D3A8CB1B1936BEF7000CBC32 /* VoiceIcon.png */,
+				D3A8CB1C1936BEF7000CBC32 /* VoiceIcon@2x.png */,
 				D3FE147A192E095C00563C4E /* bubble-default-incoming-green.png */,
 				D3FE147B192E095C00563C4E /* bubble-default-incoming-green@2x.png */,
 				D3FE147C192E095C00563C4E /* bubble-default-incoming-selected.png */,
@@ -559,7 +612,7 @@
 				ORGANIZATIONNAME = donald;
 				TargetAttributes = {
 					D3FC9E4C192C14520063A94D = {
-						DevelopmentTeam = GMQ956JNPM;
+						DevelopmentTeam = U9DQUJY69Y;
 					};
 					D3FC9E70192C14530063A94D = {
 						TestTargetID = D3FC9E4C192C14520063A94D;
@@ -594,9 +647,11 @@
 				D3FE14CB192E095C00563C4E /* bubble-flat-outgoing-old@2x.png in Resources */,
 				D3FE14C8192E095C00563C4E /* bubble-flat-incoming.png in Resources */,
 				D3FE14D4192E095C00563C4E /* bubble-square-outgoing-selected.png in Resources */,
+				D3A8CB1D1936BEF7000CBC32 /* VoiceIcon.png in Resources */,
 				D3FE14CF192E095C00563C4E /* bubble-flat-outgoing@2x.png in Resources */,
 				D3FE14BD192E095C00563C4E /* bubble-default-incoming-selected@2x.png in Resources */,
 				D3FE14C5192E095C00563C4E /* bubble-default-outgoing@2x.png in Resources */,
+				D3A8CB281936BF26000CBC32 /* black_bg_ip5@2x.png in Resources */,
 				D3FC9E67192C14520063A94D /* Main_iPad.storyboard in Resources */,
 				D3FE14D3192E095C00563C4E /* bubble-square-incoming@2x.png in Resources */,
 				D3FE14E6192E095C00563C4E /* messageReceived.aiff in Resources */,
@@ -613,6 +668,7 @@
 				D3FE14E5192E095C00563C4E /* send@2x.png in Resources */,
 				D3FE14E3192E095C00563C4E /* send-highlighted@2x.png in Resources */,
 				D3FE14D6192E095C00563C4E /* bubble-square-outgoing.png in Resources */,
+				D3A8CB1E1936BEF7000CBC32 /* VoiceIcon@2x.png in Resources */,
 				D3FE14BE192E095C00563C4E /* bubble-default-incoming.png in Resources */,
 				D3FE14C9192E095C00563C4E /* bubble-flat-incoming@2x.png in Resources */,
 				D3FE14CA192E095C00563C4E /* bubble-flat-outgoing-old.png in Resources */,
@@ -621,6 +677,7 @@
 				D3856E1E192F4F430086E9E5 /* iTunesArtwork@2x in Resources */,
 				D3FE14BB192E095C00563C4E /* bubble-default-incoming-green@2x.png in Resources */,
 				D3FE14D7192E095C00563C4E /* bubble-square-outgoing@2x.png in Resources */,
+				D3A8CB2C1936BF26000CBC32 /* mic_talk_358x358@2x.png in Resources */,
 				D3FE14DD192E095C00563C4E /* input-bar@2x.png in Resources */,
 				D3FE14C1192E095C00563C4E /* bubble-default-outgoing-green@2x.png in Resources */,
 				D3FE14CE192E095C00563C4E /* bubble-flat-outgoing.png in Resources */,
@@ -633,6 +690,7 @@
 				D3FE14D9192E095C00563C4E /* bubble-typing@2x.png in Resources */,
 				D3FE14E7192E095C00563C4E /* messageSent.aiff in Resources */,
 				D3FC9E64192C14520063A94D /* Main_iPhone.storyboard in Resources */,
+				D3A8CB2B1936BF26000CBC32 /* mic_normal_358x358@2x.png in Resources */,
 				D3FE14D5192E095C00563C4E /* bubble-square-outgoing-selected@2x.png in Resources */,
 				D3FE14E4192E095C00563C4E /* send.png in Resources */,
 				D3FE14DC192E095C00563C4E /* input-bar.png in Resources */,
@@ -642,6 +700,7 @@
 				D3FE14D8192E095C00563C4E /* bubble-typing.png in Resources */,
 				D3FE14DA192E095C00563C4E /* input-bar-flat.png in Resources */,
 				D3FE14C4192E095C00563C4E /* bubble-default-outgoing.png in Resources */,
+				D3A8CB2D1936BF26000CBC32 /* wave70x117@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,6 +730,7 @@
 				D3FC9E6A192C14520063A94D /* MASettingsViewController.m in Sources */,
 				D3FC9EA5192C15890063A94D /* MASLayoutConstraint.m in Sources */,
 				D3E6E99E193462500044F420 /* MAPeerID.m in Sources */,
+				D3A8CB291936BF26000CBC32 /* LCVoice.m in Sources */,
 				D34503B8192C6EEC0003C326 /* MAMPCHandler.m in Sources */,
 				D3FE14E8192E095C00563C4E /* UIButton+JSMessagesView.m in Sources */,
 				D3FC9E5D192C14520063A94D /* main.m in Sources */,
@@ -686,6 +746,7 @@
 				D3FE14B5192E095C00563C4E /* JSMessageSoundEffect.m in Sources */,
 				D3FC8AAB192C44FF007519E2 /* MAChatViewController.m in Sources */,
 				D3FE14EE192E0DB000563C4E /* JSMessage.m in Sources */,
+				D3A8CB2A1936BF26000CBC32 /* LCVoiceHud.m in Sources */,
 				D30E618619329B1C00FAE00C /* MAMessage.m in Sources */,
 				D36EE406193200D70052213D /* MAUIManager.m in Sources */,
 				D3FE14B7192E095C00563C4E /* JSMessageTextView.m in Sources */,
@@ -827,14 +888,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MultiChat/MultiChat-Prefix.pch";
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "977E5451-34E1-4BD5-8043-E69F31DD4434";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -845,14 +906,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MultiChat/MultiChat-Prefix.pch";
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9C9C4882-B317-4149-BF0E-0079F8495BB8";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

@@ -9,7 +9,7 @@
 #import "MAChatViewController.h"
 #import "MAAppDelegate.h"
 #import "MAMessage.h"
-
+#import "LCVoice.h"
 
 @interface MAChatViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -20,6 +20,9 @@
 @property (strong, nonatomic) NSMutableArray *messageArray;
 @property (nonatomic,strong) UIImage *willSendImage;
 @property (strong, nonatomic) NSMutableArray *timestamps;
+
+@property(nonatomic,retain) LCVoice * voice;
+
 
 @end
 
@@ -42,7 +45,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    
+    // initilaize voice recorder
+    // Init LCVoice
+    self.voice = [[LCVoice alloc] init];
 
     
     // set mpc handler
@@ -319,12 +324,28 @@
     
 }
 
+// recorded sound
+- (id)voiceForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    return message.jsmessage.speech;
+}
+
 #pragma UIImagePicker Delegate
 
 #pragma mark - Image picker delegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 	NSLog(@"Chose image!  Details:  %@", info);
+    
+    
+    UIImage * image = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage * smallImg;
+    if (image.size.width > 800) {
+        smallImg = [self imageResize:image andResizeTo:CGSizeMake(480, 320)];
+    } else {
+        smallImg = image;
+    }
     
     /*
     self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
@@ -346,6 +367,16 @@
     [self scrollToBottomAnimated:YES];
     
 	*/
+    
+    
+    [JSMessageSoundEffect playMessageSentSound];
+    
+    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithImage:smallImg];
+    [self.messageArray addObject:message];
+    
+    [self finishSend];
+    
+    
     [self dismissViewControllerAnimated:YES completion:NULL];
     
 }
@@ -355,6 +386,71 @@
 {
     [self dismissViewControllerAnimated:YES completion:NULL];
     
+}
+
+-(UIImage *)imageResize :(UIImage*)img andResizeTo:(CGSize)newSize
+{
+    CGFloat scale = [[UIScreen mainScreen]scale];
+    
+    //UIGraphicsBeginImageContext(newSize);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, scale);
+    [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+//////////////////////////////////////////////////////////////
+#pragma mark - Voice Record
+- (void) recordStart:(id)sender
+{
+    NSString * name = [NSString stringWithFormat:@"%f.caf", [[NSDate date] timeIntervalSince1970]];
+    
+    [self.voice startRecordWithPath:[NSString stringWithFormat:@"%@/Documents/%@", NSHomeDirectory(), name]];
+    
+}
+
+- (void) recordEnd:(id)sender
+{
+    [self.voice stopRecordWithCompletionBlock:^{
+        
+        if (self.voice.recordTime > 0.0f) {
+            /*
+             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"\nrecord finish ! \npath:%@ \nduration:%f",self.voice.recordPath,self.voice.recordTime] delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+             [alert show];*/
+            
+            [JSMessageSoundEffect playMessageSentSound];
+            
+            
+            // send recorded data to peer
+            if([[NSFileManager defaultManager] fileExistsAtPath:self.voice.recordPath])
+            {
+                NSData *voicedata = [[NSFileManager defaultManager] contentsAtPath:self.voice.recordPath];
+                
+                MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithSpeech:voicedata];
+                [self.messageArray addObject:message];
+                
+                [self finishSend];
+            }
+            else
+            {
+                NSLog(@"File not exits");
+            }
+            
+            
+            [self.tableView reloadData];
+            [self scrollToBottomAnimated:YES];
+        }
+        
+    }];
+}
+
+- (void) recordCancel:(id)sender
+{
+    [self.voice cancelled];
+    
+    //    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil message:@"取消了" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+    //    [alert show];
 }
 
 

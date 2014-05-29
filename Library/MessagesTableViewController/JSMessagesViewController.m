@@ -51,6 +51,8 @@
 
 @implementation JSMessagesViewController
 
+@synthesize isRecording = _isRecording;
+
 #pragma mark - Initialization
 - (void)setup
 {
@@ -87,6 +89,35 @@
 		// button action
 		[mediaButton addTarget:self action:@selector(cameraAction:) forControlEvents:UIControlEventTouchUpInside];
 	}
+    
+    //----- kim
+    UIButton* voiceButton = nil;
+    if (kAllowsVoice) {
+        // set up the image and button frame
+		UIImage* image = [UIImage imageNamed:@"VoiceIcon"];
+        
+        CGRect frame;
+        if (kAllowsMedia) {
+            frame = CGRectMake(20 + mediaButton.frame.size.width, 0, image.size.width, image.size.height);
+        } else {
+            frame = CGRectMake(4, 0, image.size.width, image.size.height);
+        }
+        
+        CGFloat yHeight = (INPUT_HEIGHT - frame.size.height) / 2.0f;
+		frame.origin.y = yHeight;
+		
+		// make the button
+		voiceButton = [[UIButton alloc] initWithFrame:frame];
+		[voiceButton setBackgroundImage:image forState:UIControlStateNormal];
+		
+        // Set record start action for UIControlEventTouchDown
+        [voiceButton addTarget:self action:@selector(voiceActionStart:) forControlEvents:UIControlEventTouchDown];
+        // Set record end action for UIControlEventTouchUpInside
+        [voiceButton addTarget:self action:@selector(voiceActionEnd:) forControlEvents:UIControlEventTouchUpInside];
+        // Set record cancel action for UIControlEventTouchUpOutside
+        [voiceButton addTarget:self action:@selector(voiceActionCancel:) forControlEvents:UIControlEventTouchUpOutside];
+    }
+    
 	
     CGRect inputFrame = CGRectMake(0.0f, size.height - INPUT_HEIGHT, size.width, INPUT_HEIGHT);
     self.inputToolBarView = [[JSMessageInputView alloc] initWithFrame:inputFrame delegate:self];
@@ -125,6 +156,39 @@
 		self.inputToolBarView.textView.frame = frame;
 	}
 	
+    //------- kim
+    if (kAllowsVoice)
+	{
+		// adjust the size of the send button to balance out more with the camera button on the other side.
+        
+        CGRect frame = self.inputToolBarView.sendButton.frame;
+        if (!kAllowsMedia) {
+            frame.size.width -= 16;
+            frame.origin.x += 16;
+            self.inputToolBarView.sendButton.frame = frame;
+        }
+		
+		// add the voice button
+		[self.inputToolBarView addSubview:voiceButton];
+        
+        // move the tet view over
+        if (!kAllowsMedia) {
+            frame = self.inputToolBarView.textView.frame;
+            frame.origin.x += voiceButton.frame.size.width + voiceButton.frame.origin.x;
+            frame.size.width -= voiceButton.frame.size.width + voiceButton.frame.origin.x;
+            frame.size.width += 16;		// from the send button adjustment above
+            self.inputToolBarView.textView.frame = frame;
+        } else {
+            frame = self.inputToolBarView.textView.frame;
+            frame.origin.x += voiceButton.frame.size.width + 20;
+            frame.size.width -= voiceButton.frame.size.width + voiceButton.frame.origin.x;
+            frame.size.width += 16;		// from the send button adjustment above
+            self.inputToolBarView.textView.frame = frame;
+        }
+		
+	}
+	
+    
     [self setBackgroundColor:[UIColor messagesBackgroundColor]];
 }
 
@@ -215,6 +279,22 @@
     }
 }
 
+#pragma - Voice Action
+- (void)voiceActionStart:(id)sender
+{
+    [self.delegate recordStart:sender];
+}
+
+- (void)voiceActionEnd:(id)sender
+{
+    [self.delegate recordEnd:sender];
+}
+
+- (void)voiceActionCancel:(id)sender
+{
+    [self.delegate recordCancel:sender];
+}
+
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -264,6 +344,10 @@
 	if (kAllowsMedia)
 		[cell setMedia:[self.dataSource dataForRowAtIndexPath:indexPath]];
     
+    if (kAllowsVoice) {
+        [cell setSpeech:[self.dataSource voiceForRowAtIndexPath:indexPath]];
+    }
+    
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
     [cell setSender:[self.dataSource senderForRowAtIndexPath:indexPath]];
     [cell setBackgroundColor:tableView.backgroundColor];
@@ -283,6 +367,40 @@
                                                   avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
     }
 }
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSBubbleMediaType mediaType = [self.delegate messageMediaTypeForRowAtIndexPath:indexPath];
+    
+    if (mediaType == JSBubbleMediaTypeSpeech) {
+        JSBubbleMessageCell * cell = (JSBubbleMessageCell *)[tableView cellForRowAtIndexPath:indexPath];
+        NSData * fileData = (NSData *)[cell getSpeech];
+        
+        //If the track is playing, pause and achange playButton text to "Play"
+        if([player isPlaying])
+        {
+            [player pause];
+        }
+        //If the track is not player, play the track and change the play button to "Pause"
+        else
+        {
+            NSError *playerError;
+            player = [[AVAudioPlayer alloc] initWithData:fileData error:&playerError];
+            
+            [player play];
+            
+            if (player == nil)
+            {
+                NSLog(@"ERror creating player: %@", [playerError description]);
+            }
+            player.delegate = self;
+        }
+
+    }
+    
+    
+}
+
 
 #pragma mark - Messages view controller
 - (BOOL)shouldHaveTimestampForRowAtIndexPath:(NSIndexPath *)indexPath

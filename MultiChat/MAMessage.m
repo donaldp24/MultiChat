@@ -22,13 +22,14 @@
         self.jsmessage.mediaType = [[aDecoder decodeObjectForKey:kMessageMediaTypeKey] intValue];
         switch (self.jsmessage.mediaType) {
             case JSBubbleMediaTypeText:
-                self.jsmessage.text = [aDecoder decodeObjectForKey:kMessageRawDataKey];
+                self.jsmessage.text = [aDecoder decodeObjectForKey:kMessageTextKey];
                 break;
             case JSBubbleMediaTypeImage:
-                self.jsmessage.image = [aDecoder decodeObjectForKey:kMessageRawDataKey];
+                self.jsmessage.image = [aDecoder decodeObjectForKey:kMessageImageKey];
                 break;
             case JSBubbleMediaTypeSpeech:
-                self.jsmessage.speech = [aDecoder decodeObjectForKey:kMessageRawDataKey];
+                self.jsmessage.text = @"....)))  ";
+                self.jsmessage.speech = [aDecoder decodeObjectForKey:kMessageSpeechKey];
                 break;
             default:
                 break;
@@ -53,13 +54,14 @@
     
     switch (self.jsmessage.mediaType) {
         case JSBubbleMediaTypeText:
-            [aCoder encodeObject:self.jsmessage.text forKey:kMessageRawDataKey];
+            [aCoder encodeObject:self.jsmessage.text forKey:kMessageTextKey];
             break;
         case JSBubbleMediaTypeImage:
-            [aCoder encodeObject:self.jsmessage.image forKey:kMessageRawDataKey];
+            [aCoder encodeObject:self.jsmessage.image forKey:kMessageImageKey];
             break;
         case JSBubbleMediaTypeSpeech:
-            [aCoder encodeObject:self.jsmessage.speech forKey:kMessageRawDataKey];
+            [aCoder encodeObject:self.jsmessage.text forKey:kMessageTextKey];
+            [aCoder encodeObject:self.jsmessage.speech forKey:kMessageSpeechKey];
             break;
         default:
             break;

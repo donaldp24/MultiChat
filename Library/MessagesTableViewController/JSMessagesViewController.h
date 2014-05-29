@@ -35,6 +35,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import <AVFoundation/AVFoundation.h>
 
 #import "JSBubbleMessageCell.h"
 #import "JSMessageInputView.h"
@@ -43,6 +44,7 @@
 
 
 #define kAllowsMedia		YES
+#define kAllowsVoice        YES
 
 typedef enum {
     JSMessagesViewTimestampPolicyAll = 0,
@@ -64,6 +66,11 @@ typedef enum {
 @required
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text;
 - (void)cameraPressed:(id)sender;
+//----- kim
+- (void)recordStart:(id)sender;
+- (void)recordEnd:(id)sender;
+- (void)recordCancel:(id)sender;
+//-----
 - (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -87,11 +94,19 @@ typedef enum {
 - (UIImage *)avatarImageForOutgoingMessage;
 @optional
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath;
+//-------- kim
+- (id)voiceForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
 
 
-@interface JSMessagesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, JSMessageInputViewDelegate>
+@interface JSMessagesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, JSMessageInputViewDelegate, AVAudioPlayerDelegate>
+{
+    AVAudioPlayer *player;
+    BOOL isRecording;
+}
+
+@property (nonatomic) BOOL isRecording;
 
 @property (weak, nonatomic) id<JSMessagesViewDelegate> delegate;
 @property (weak, nonatomic) id<JSMessagesViewDataSource> dataSource;
@@ -102,6 +117,8 @@ typedef enum {
 
 #pragma mark - Initialization
 - (UIButton *)sendButton;
+
+
 
 #pragma mark - Actions
 - (void)sendPressed:(UIButton *)sender;

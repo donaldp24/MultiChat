@@ -28,13 +28,9 @@ typedef enum {
 
 
 
-
-
-
 @interface JSMessage : NSObject
 
 @property (strong, nonatomic) NSString *sender;
-
 @property (strong, nonatomic) NSString *text;
 @property (strong, nonatomic) UIImage *image;
 @property (strong, nonatomic) NSData *speech;
@@ -43,7 +39,5 @@ typedef enum {
 @property (nonatomic) JSBubbleMessageStyle messageStyle;
 
 @property (strong, nonatomic) NSDate *timestamp;
-
-
 
 @end

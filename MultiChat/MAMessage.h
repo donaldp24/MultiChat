@@ -13,7 +13,9 @@
 #define kMessageTypeKey             @"messagetype"
 #define kMessageMediaTypeKey       @"mediatype"
 #define kMessageStyleKey            @"messagestyle"
-#define kMessageRawDataKey          @"rawdata"
+#define kMessageTextKey          @"text"
+#define kMessageImageKey          @"image"
+#define kMessageSpeechKey          @"speech" 
 #define kMessageSenderKey           @"sender"
 #define kMessageTimestampKey        @"timestamp"
 

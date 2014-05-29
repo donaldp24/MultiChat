@@ -36,6 +36,8 @@
 - (void)getPeers:(NSMutableArray **)peersArray;
 - (MAMessage *)sendMessageWithText:(NSString *)text;
 - (MAMessage *)sendMessageWithText:(NSString *)text peerID:(MAPeerID *)targetPeerID;
+- (MAMessage *)sendMessageWithImage:(UIImage *)image;
+- (MAMessage *)sendMessageWithSpeech:(NSData *)speech;
 
 
 @end

@@ -46,6 +46,7 @@ extern CGFloat const kJSAvatarSize;
 @property (nonatomic,assign) JSBubbleMediaType mediaType;
 @property (copy, nonatomic) NSString *text;
 @property (copy, nonatomic) id data;
+@property (copy, nonatomic) id speech;
 @property (copy, nonatomic) NSString *sender;
 @property (assign, nonatomic) BOOL selectedToShowCopyMenu;
 

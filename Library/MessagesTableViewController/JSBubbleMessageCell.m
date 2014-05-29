@@ -217,6 +217,25 @@
 	}
 }
 
+- (void)setSpeech:(id)data
+{
+    if ([data isKindOfClass:[NSData class]])
+	{
+		// voice
+		NSLog(@"show the voice here");
+        self.bubbleView.speech = data;
+	}
+	else
+	{
+		// show a button / icon to view details
+		NSLog(@"voice view");
+	}
+}
+
+- (id)getSpeech
+{
+    return self.bubbleView.speech;
+}
 
 - (void)setTimestamp:(NSDate *)date
 {
