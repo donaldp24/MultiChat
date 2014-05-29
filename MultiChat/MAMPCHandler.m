@@ -14,15 +14,20 @@
     BOOL _isStarted;
     BOOL _isConnected;
     
-    BOOL _isFoundPeer;
+    NSString *_advertisingPeer;
     BOOL _isInvited;
     
     NSTimer *_timer;
     int _lastTime;
     int _interval;
+    
     int _lastInviteTime;
     int _lastFoundPeerTime;
-    BOOL _advertising;
+    
+    NSMutableArray *_invitingPeers;
+    
+    
+    BOOL _isAdvertising;
 }
 
 @property (nonatomic, strong) MAPeerID *peerID;
@@ -42,6 +47,7 @@
 @property (nonatomic, strong) NSMutableDictionary *peers;
 
 
+
 @end
 
 @implementation MAMPCHandler
@@ -53,9 +59,12 @@
     self.delegateLock = [[NSRecursiveLock alloc] init];
     
     _isStarted = NO;
+    _isConnected = NO;
     
     self.messages = [[NSMutableDictionary alloc] init];
     self.peers = [[NSMutableDictionary alloc] init];
+    
+    _invitingPeers = [[NSMutableArray alloc] init];
     
     
     return self;
@@ -73,18 +82,20 @@
     [self.theLock lock];
     
     _isConnected = NO;
-    _isFoundPeer = NO;
-    _isInvited = NO;
+    _advertisingPeer = nil;
+    [_invitingPeers removeAllObjects];
 
     [self setupPeerWithDisplayName:displayName];
-    [self setupSession];
-    [self startBrowser];
     
+    [self setupSession];
+    [self startAdvertiser];
+    [self startBrowser];
+
     NSLog(@"handler started");
     
     _isStarted = YES;
     
-    _interval = 1;
+    _interval = 3;
     _lastTime = [[NSDate date] timeIntervalSince1970];
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerProc:) userInfo:nil repeats:YES];
     
@@ -169,6 +180,8 @@
     
     [self.browser startBrowsingForPeers];
     
+    NSLog(@"start browsing");
+    
     [self.theLock unlock];
 }
 
@@ -179,7 +192,7 @@
     self.browser.delegate = nil;
     self.browser = nil;
     
-    _isFoundPeer = NO;
+    NSLog(@"stop browsing");
     
     [self.theLock unlock];
 }
@@ -194,7 +207,7 @@
     self.advertiser.delegate = self;
     [self.advertiser startAdvertisingPeer];
     
-    _advertising = YES;
+    _isAdvertising = YES;
     
     NSLog(@"start advertising");
     
@@ -208,7 +221,7 @@
     self.advertiser.delegate = nil;
     self.advertiser = nil;
     
-    _advertising = NO;
+    _isAdvertising = NO;
     
     _isInvited = NO;
     
@@ -247,11 +260,28 @@
                                 @"state" : @(state) };
     
     NSLog(@"didChangeState : %d, displayName : %@", (int)state, [peerID displayName]);
+    
+    for (NSDictionary *invitePeer in _invitingPeers) {
+        //NSNumber *invitingTime = [invitePeer objectForKey:@"time"];
+        MCPeerID *invitePeerID = [invitePeer objectForKey:@"peerID"];
+        if ([invitePeerID isEqual:peerID])
+        {
+            [_invitingPeers removeObject:invitePeer];
+        }
+    }
+    
+    if (state == MCSessionStateNotConnected &&
+        _advertisingPeer != nil &&
+        [_advertisingPeer isEqualToString:[peerID displayName]])
+    {
+        [self.session disconnect];
+    }
+    
+    
     if (self.session.connectedPeers.count <= 0)
     {
-        _isInvited = NO;
-        _isFoundPeer = NO;
         _isConnected = NO;
+        _advertisingPeer = nil;
     }
     else
     {
@@ -312,7 +342,6 @@
 {
     [self.theLock lock];
     
- 
     if (context)
     {
         NSString *uid = [[NSString alloc] initWithData:context encoding:NSUTF8StringEncoding];
@@ -320,27 +349,23 @@
             [self.peers setObject:peerID forKey:uid];
     }
     
-    if ([[self.session connectedPeers] containsObject:peerID])
+    if (_advertisingPeer == nil && [[self.peerID.peerID displayName] caseInsensitiveCompare:[peerID displayName]] == NSOrderedAscending)
+    {
+        _lastInviteTime = [[NSDate date] timeIntervalSince1970];
+        NSLog(@"invite accepted : %@", [peerID displayName]);
+        NSMutableDictionary *invitePeer = [[NSMutableDictionary alloc] init];
+        [invitePeer setObject:[NSNumber numberWithInt:_lastInviteTime] forKey:@"time"];
+        [invitePeer setObject:peerID forKey:@"peerID"];
+
+        [_invitingPeers addObject:invitePeer];
+        invitationHandler(YES, self.session);
+        _isInvited = YES;
+    }
+    else
     {
         NSLog(@"invite rejected : %@", [peerID displayName]);
         invitationHandler(NO, nil);
     }
-    else
-    {
-        if (_advertising == NO)
-        {
-            NSLog(@"invite rejected : %@, now browsing", [peerID displayName]);
-            invitationHandler(NO, nil);
-        }
-        else
-        {
-            _lastInviteTime = [[NSDate date] timeIntervalSince1970];
-            NSLog(@"invite accepted : %@", [peerID displayName]);
-            invitationHandler(YES, self.session);
-            _isInvited = YES;
-        }
-    }
-    
     
     [self.theLock unlock];
 }
@@ -363,31 +388,35 @@
         [self.peers setObject:peerID forKey:uid];
     }
 
-    if ([[self.session connectedPeers] containsObject:peerID])
+    NSLog(@"found peer %@ ---, advertisingPeer %@", [peerID displayName], _advertisingPeer);
+    
+    //if ([[self.session connectedPeers] containsObject:peerID])
+    //{
+    //    NSLog(@"found peer %@, already connected", [peerID displayName]);
+    //}
+    //else
     {
-        NSLog(@"found peer %@, already connected", [peerID displayName]);
-    }
-    else
-    {
-        if (_advertising == YES)
+        if (_advertisingPeer == nil)
         {
-            NSLog(@"found peer %@, not send invite requesting, advertising now", [peerID displayName]);
-        }
-        else
-        {
-            if (_isFoundPeer == YES)
+            if ([[self.peerID.peerID displayName] caseInsensitiveCompare:[peerID displayName]] == NSOrderedDescending)
             {
-                NSLog(@"found peer %@, not send invite requesting, already sent invite", [peerID displayName]);
-            }
-            else
-            {
+                
                 NSLog(@"found peer %@, send invite requesting", [peerID displayName]);
                 NSData *context = [self.peerID.uid dataUsingEncoding:NSUTF8StringEncoding];
                 
                 _lastFoundPeerTime = [[NSDate date] timeIntervalSince1970];
                 [browser invitePeer:peerID toSession:self.session withContext:context timeout:kFoundPeerTimeout];
-                _isFoundPeer = YES;
+                _advertisingPeer = [NSString stringWithFormat:@"%@", [peerID displayName] ];
             }
+        }
+        else if ([_advertisingPeer caseInsensitiveCompare:[peerID displayName]] == NSOrderedDescending)
+        {
+            NSLog(@"found peer %@, send invite requesting", [peerID displayName]);
+            NSData *context = [self.peerID.uid dataUsingEncoding:NSUTF8StringEncoding];
+            
+            _lastFoundPeerTime = [[NSDate date] timeIntervalSince1970];
+            [browser invitePeer:peerID toSession:self.session withContext:context timeout:kFoundPeerTimeout];
+            _advertisingPeer = [NSString stringWithFormat:@"%@", [peerID displayName] ];
         }
     }
 
@@ -404,19 +433,55 @@
 {
     [self.theLock lock];
     
-    if (_isConnected)
-    {
-        //
-    }
-    else
-    {
-        int curTime = [[NSDate date] timeIntervalSince1970];
-        if (curTime - _lastTime >= _interval)
+    // count timeout
+    int curTime = [[NSDate date] timeIntervalSince1970];
+    
+    for (NSMutableDictionary *invitePeer in _invitingPeers) {
+        NSNumber *inviteTime = [invitePeer objectForKey:@"time"];
+        int time = [inviteTime intValue];
+        
+        
+        if (curTime - time >= kInviteTimeout)
         {
-            _lastTime = curTime;
-            _interval = 1 + (arc4random() % 2);
+            [_invitingPeers removeObject:invitePeer];
+        }
+    }
+
+
+    
+
+    
+    if (curTime - _lastTime >= _interval)
+    {
+        _lastTime = curTime;
+        _interval = 1 + (arc4random() % 2);
+        
+        
+        if (_invitingPeers.count == 0)
+        {
+            //[self stopAdvertiser];
+            //[self startAdvertiser];
+        }
+        
+        if (_isConnected == YES)
+        {
+            //
+        }
+        else
+        {
             
-            if (_advertising == NO)
+            
+            if (curTime - _lastFoundPeerTime > kFoundPeerTimeout)
+            {
+                _advertisingPeer = nil;
+                [self.session disconnect];
+                [self stopBrowser];
+                [self startBrowser];
+                _lastFoundPeerTime = curTime;
+            }
+            
+            /*
+            if (_isAdvertising == NO)
             {
                 if (_isFoundPeer == NO || (_isFoundPeer == YES && curTime - _lastFoundPeerTime >= kFoundPeerTimeout))
                 {
@@ -436,8 +501,10 @@
                     [self startBrowser];
                 }
             }
+             */
         }
     }
+
 
     [self.theLock unlock];
 }

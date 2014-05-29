@@ -341,11 +341,11 @@
     
     UIImage * image = [info objectForKey:UIImagePickerControllerEditedImage];
     UIImage * smallImg;
-    if (image.size.width > 800) {
-        smallImg = [self imageResize:image andResizeTo:CGSizeMake(480, 320)];
-    } else {
-        smallImg = image;
-    }
+    //if (image.size.width > 800) {
+        smallImg = [self imageResize:image andResizeTo:CGSizeMake(100, 100)];
+    //} else {
+    //    smallImg = image;
+    //}
     
     /*
     self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
