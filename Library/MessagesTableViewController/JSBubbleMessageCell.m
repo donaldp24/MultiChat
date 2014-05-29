@@ -277,6 +277,12 @@
     return MAX(avatarHeight, [JSBubbleView cellHeightForImage:bubbleViewImage]) + timestampHeight;
 }
 
++ (CGFloat)neededHeightForSpeech:(NSData *)data timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar{
+    CGFloat timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT : 0.0f;
+    CGFloat avatarHeight = (hasAvatar) ? kJSAvatarSize : 0.0f;
+    return MAX(avatarHeight, [JSBubbleView cellHeightForText:@" "]) + timestampHeight;
+}
+
 #pragma mark - Copying
 - (BOOL)canBecomeFirstResponder
 {

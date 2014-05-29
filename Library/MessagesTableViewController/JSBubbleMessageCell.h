@@ -71,5 +71,8 @@ typedef enum {
                      timestamp:(BOOL)hasTimestamp
                         avatar:(BOOL)hasAvatar;
 
++ (CGFloat)neededHeightForSpeech:(NSData *)data
+                       timestamp:(BOOL)hasTimestamp
+                          avatar:(BOOL)hasAvatar;
 
 @end

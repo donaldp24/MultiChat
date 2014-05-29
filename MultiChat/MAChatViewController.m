@@ -313,7 +313,7 @@
     return [UIImage imageNamed:@"demo-avatar-woz"];
 }
 
-- (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (id)imageForRowAtIndexPath:(NSIndexPath *)indexPath{
     MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
     return message.jsmessage.image;
     
@@ -325,7 +325,7 @@
 }
 
 // recorded sound
-- (id)voiceForRowAtIndexPath:(NSIndexPath *)indexPath
+- (id)speechForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
     return message.jsmessage.speech;

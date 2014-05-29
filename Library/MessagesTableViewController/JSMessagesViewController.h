@@ -93,9 +93,9 @@ typedef enum {
 - (UIImage *)avatarImageForIncomingMessage;
 - (UIImage *)avatarImageForOutgoingMessage;
 @optional
-- (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (id)imageForRowAtIndexPath:(NSIndexPath *)indexPath;
 //-------- kim
-- (id)voiceForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (id)speechForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
 

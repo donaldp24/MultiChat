@@ -342,10 +342,10 @@
     }
     
 	if (kAllowsMedia)
-		[cell setMedia:[self.dataSource dataForRowAtIndexPath:indexPath]];
+		[cell setMedia:[self.dataSource imageForRowAtIndexPath:indexPath]];
     
     if (kAllowsVoice) {
-        [cell setSpeech:[self.dataSource voiceForRowAtIndexPath:indexPath]];
+        [cell setSpeech:[self.dataSource speechForRowAtIndexPath:indexPath]];
     }
     
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
@@ -357,15 +357,21 @@
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(![self.delegate messageMediaTypeForRowAtIndexPath:indexPath]){
+    JSBubbleMediaType type = [self.delegate messageMediaTypeForRowAtIndexPath:indexPath];
+    if(type == JSBubbleMediaTypeText){
         return [JSBubbleMessageCell neededHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]
                                               timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
                                                  avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
-    }else{
-        return [JSBubbleMessageCell neededHeightForImage:[self.dataSource dataForRowAtIndexPath:indexPath]
+    }else if (type == JSBubbleMediaTypeImage){
+        return [JSBubbleMessageCell neededHeightForImage:[self.dataSource imageForRowAtIndexPath:indexPath]
                                                timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
                                                   avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
+    }else if (type == JSBubbleMediaTypeSpeech){
+        return [JSBubbleMessageCell neededHeightForSpeech:[self.dataSource speechForRowAtIndexPath:indexPath]
+                                              timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
+                                                 avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
     }
+    return 0.0;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
