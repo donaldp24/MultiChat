@@ -357,21 +357,16 @@
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    JSBubbleMediaType type = [self.delegate messageMediaTypeForRowAtIndexPath:indexPath];
-    if(type == JSBubbleMediaTypeText){
+    if([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeText ||
+       [self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeSpeech){
         return [JSBubbleMessageCell neededHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]
                                               timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
                                                  avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
-    }else if (type == JSBubbleMediaTypeImage){
+    }else{
         return [JSBubbleMessageCell neededHeightForImage:[self.dataSource imageForRowAtIndexPath:indexPath]
                                                timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
                                                   avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
-    }else if (type == JSBubbleMediaTypeSpeech){
-        return [JSBubbleMessageCell neededHeightForSpeech:[self.dataSource speechForRowAtIndexPath:indexPath]
-                                              timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
-                                                 avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
     }
-    return 0.0;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
