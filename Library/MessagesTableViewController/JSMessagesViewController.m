@@ -357,7 +357,7 @@
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(![self.delegate messageMediaTypeForRowAtIndexPath:indexPath]){
+    if([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeText || [self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeSpeech){
         return [JSBubbleMessageCell neededHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]
                                               timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
                                                  avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
