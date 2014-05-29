@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D30E618619329B1C00FAE00C /* MAMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D30E618519329B1C00FAE00C /* MAMessage.m */; };
 		D332B181192CF76C00C5ABFF /* MAGlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = D332B180192CF76C00C5ABFF /* MAGlobalData.m */; };
 		D34503B8192C6EEC0003C326 /* MAMPCHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = D34503B7192C6EEC0003C326 /* MAMPCHandler.m */; };
+		D36EE403193200A50052213D /* MAPeopleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D36EE402193200A50052213D /* MAPeopleViewController.m */; };
+		D36EE406193200D70052213D /* MAUIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D36EE405193200D70052213D /* MAUIManager.m */; };
 		D3856E1D192F4F430086E9E5 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = D3856E1B192F4F430086E9E5 /* iTunesArtwork */; };
 		D3856E1E192F4F430086E9E5 /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = D3856E1C192F4F430086E9E5 /* iTunesArtwork@2x */; };
+		D3E6E99E193462500044F420 /* MAPeerID.m in Sources */ = {isa = PBXBuildFile; fileRef = D3E6E99D193462500044F420 /* MAPeerID.m */; };
 		D3FC8AAB192C44FF007519E2 /* MAChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC8AAA192C44FF007519E2 /* MAChatViewController.m */; };
 		D3FC9E51192C14520063A94D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FC9E50192C14520063A94D /* Foundation.framework */; };
 		D3FC9E53192C14520063A94D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FC9E52192C14520063A94D /* CoreGraphics.framework */; };
@@ -20,7 +24,7 @@
 		D3FC9E61192C14520063A94D /* MAAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC9E60192C14520063A94D /* MAAppDelegate.m */; };
 		D3FC9E64192C14520063A94D /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3FC9E62192C14520063A94D /* Main_iPhone.storyboard */; };
 		D3FC9E67192C14520063A94D /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3FC9E65192C14520063A94D /* Main_iPad.storyboard */; };
-		D3FC9E6A192C14520063A94D /* MAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC9E69192C14520063A94D /* MAViewController.m */; };
+		D3FC9E6A192C14520063A94D /* MASettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC9E69192C14520063A94D /* MASettingsViewController.m */; };
 		D3FC9E6C192C14520063A94D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3FC9E6B192C14520063A94D /* Images.xcassets */; };
 		D3FC9E73192C14530063A94D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FC9E72192C14530063A94D /* XCTest.framework */; };
 		D3FC9E74192C14530063A94D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FC9E50192C14520063A94D /* Foundation.framework */; };
@@ -110,12 +114,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D30E618419329B1C00FAE00C /* MAMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAMessage.h; sourceTree = "<group>"; };
+		D30E618519329B1C00FAE00C /* MAMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAMessage.m; sourceTree = "<group>"; };
 		D332B17F192CF76C00C5ABFF /* MAGlobalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAGlobalData.h; sourceTree = "<group>"; };
 		D332B180192CF76C00C5ABFF /* MAGlobalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAGlobalData.m; sourceTree = "<group>"; };
 		D34503B6192C6EEC0003C326 /* MAMPCHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAMPCHandler.h; sourceTree = "<group>"; };
 		D34503B7192C6EEC0003C326 /* MAMPCHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAMPCHandler.m; sourceTree = "<group>"; };
+		D36EE401193200A50052213D /* MAPeopleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAPeopleViewController.h; sourceTree = "<group>"; };
+		D36EE402193200A50052213D /* MAPeopleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAPeopleViewController.m; sourceTree = "<group>"; };
+		D36EE404193200D70052213D /* MAUIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAUIManager.h; sourceTree = "<group>"; };
+		D36EE405193200D70052213D /* MAUIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAUIManager.m; sourceTree = "<group>"; };
 		D3856E1B192F4F430086E9E5 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		D3856E1C192F4F430086E9E5 /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
+		D3E6E99C193462500044F420 /* MAPeerID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAPeerID.h; sourceTree = "<group>"; };
+		D3E6E99D193462500044F420 /* MAPeerID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAPeerID.m; sourceTree = "<group>"; };
 		D3FC8AA9192C44FF007519E2 /* MAChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAChatViewController.h; sourceTree = "<group>"; };
 		D3FC8AAA192C44FF007519E2 /* MAChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAChatViewController.m; sourceTree = "<group>"; };
 		D3FC9E4D192C14520063A94D /* MultiChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,8 +142,8 @@
 		D3FC9E60192C14520063A94D /* MAAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MAAppDelegate.m; sourceTree = "<group>"; };
 		D3FC9E63192C14520063A94D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		D3FC9E66192C14520063A94D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		D3FC9E68192C14520063A94D /* MAViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MAViewController.h; sourceTree = "<group>"; };
-		D3FC9E69192C14520063A94D /* MAViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MAViewController.m; sourceTree = "<group>"; };
+		D3FC9E68192C14520063A94D /* MASettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MASettingsViewController.h; sourceTree = "<group>"; };
+		D3FC9E69192C14520063A94D /* MASettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MASettingsViewController.m; sourceTree = "<group>"; };
 		D3FC9E6B192C14520063A94D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D3FC9E71192C14530063A94D /* MultiChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3FC9E72192C14530063A94D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -303,8 +315,8 @@
 				D3FC9E60192C14520063A94D /* MAAppDelegate.m */,
 				D3FC9E62192C14520063A94D /* Main_iPhone.storyboard */,
 				D3FC9E65192C14520063A94D /* Main_iPad.storyboard */,
-				D3FC9E68192C14520063A94D /* MAViewController.h */,
-				D3FC9E69192C14520063A94D /* MAViewController.m */,
+				D3FC9E68192C14520063A94D /* MASettingsViewController.h */,
+				D3FC9E69192C14520063A94D /* MASettingsViewController.m */,
 				D3FC9E6B192C14520063A94D /* Images.xcassets */,
 				D3FC9E57192C14520063A94D /* Supporting Files */,
 				D3FC8AA9192C44FF007519E2 /* MAChatViewController.h */,
@@ -313,6 +325,14 @@
 				D34503B7192C6EEC0003C326 /* MAMPCHandler.m */,
 				D332B17F192CF76C00C5ABFF /* MAGlobalData.h */,
 				D332B180192CF76C00C5ABFF /* MAGlobalData.m */,
+				D36EE401193200A50052213D /* MAPeopleViewController.h */,
+				D36EE402193200A50052213D /* MAPeopleViewController.m */,
+				D36EE404193200D70052213D /* MAUIManager.h */,
+				D36EE405193200D70052213D /* MAUIManager.m */,
+				D30E618419329B1C00FAE00C /* MAMessage.h */,
+				D30E618519329B1C00FAE00C /* MAMessage.m */,
+				D3E6E99C193462500044F420 /* MAPeerID.h */,
+				D3E6E99D193462500044F420 /* MAPeerID.m */,
 			);
 			path = MultiChat;
 			sourceTree = "<group>";
@@ -643,12 +663,14 @@
 				D3FC9EA9192C15890063A94D /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				D3FC9EA7192C15890063A94D /* MASViewConstraint.m in Sources */,
 				D3FE14B4192E095C00563C4E /* JSMessageInputView.m in Sources */,
+				D36EE403193200A50052213D /* MAPeopleViewController.m in Sources */,
 				D3FC9EA2192C15890063A94D /* MASCompositeConstraint.m in Sources */,
 				D3FE14EB192E095C00563C4E /* UIView+AnimationOptionsForCurve.m in Sources */,
 				D3FC9EA8192C15890063A94D /* NSArray+MASAdditions.m in Sources */,
 				D3FC9E61192C14520063A94D /* MAAppDelegate.m in Sources */,
-				D3FC9E6A192C14520063A94D /* MAViewController.m in Sources */,
+				D3FC9E6A192C14520063A94D /* MASettingsViewController.m in Sources */,
 				D3FC9EA5192C15890063A94D /* MASLayoutConstraint.m in Sources */,
+				D3E6E99E193462500044F420 /* MAPeerID.m in Sources */,
 				D34503B8192C6EEC0003C326 /* MAMPCHandler.m in Sources */,
 				D3FE14E8192E095C00563C4E /* UIButton+JSMessagesView.m in Sources */,
 				D3FC9E5D192C14520063A94D /* main.m in Sources */,
@@ -664,6 +686,8 @@
 				D3FE14B5192E095C00563C4E /* JSMessageSoundEffect.m in Sources */,
 				D3FC8AAB192C44FF007519E2 /* MAChatViewController.m in Sources */,
 				D3FE14EE192E0DB000563C4E /* JSMessage.m in Sources */,
+				D30E618619329B1C00FAE00C /* MAMessage.m in Sources */,
+				D36EE406193200D70052213D /* MAUIManager.m in Sources */,
 				D3FE14B7192E095C00563C4E /* JSMessageTextView.m in Sources */,
 				D3FE14B8192E095C00563C4E /* JSQMessagesAvatarFactory.m in Sources */,
 				D3FE14B2192E095C00563C4E /* JSBubbleView.m in Sources */,
@@ -810,7 +834,7 @@
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4BE298B2-5ECC-4DBC-A7A1-E69FD31853C1";
+				PROVISIONING_PROFILE = "977E5451-34E1-4BD5-8043-E69F31DD4434";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -828,7 +852,7 @@
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "EDDD354E-945F-48A9-8963-969E0B23D1AC";
+				PROVISIONING_PROFILE = "9C9C4882-B317-4149-BF0E-0079F8495BB8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

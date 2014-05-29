@@ -8,7 +8,7 @@
 
 #import "MAChatViewController.h"
 #import "MAAppDelegate.h"
-#import "JSMessage.h"
+#import "MAMessage.h"
 
 
 @interface MAChatViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
@@ -42,14 +42,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    // title
-    self.navigationItem.hidesBackButton = YES;
     
-    
-    // settings button
-    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settingsicon"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsPressed:)];
-    self.navigationItem.leftBarButtonItem = settingsButton;
-    
+
     
     // set mpc handler
     self.appDelegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -77,9 +71,7 @@
     //[self.lblStatus setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     
     
-    [self refreshStatus:[NSNumber numberWithInteger:[self.appDelegate.mpcHandler.session connectedPeers].count]];
-    
-    
+    [self refreshStatus];
 }
 
 - (void)didReceiveMemoryWarning
@@ -92,7 +84,10 @@
 {
     [super viewWillAppear:animated];
     
-    self.navigationItem.title = @"MultiChat";
+    if (self.receiverPeerID == nil)
+        self.navigationItem.title = @"Everyone";
+    else
+        self.navigationItem.title = [NSString stringWithFormat:@"%@", [self.receiverPeerID displayName]];
     
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     
@@ -121,30 +116,28 @@
     [super viewDidAppear:animated];
 }
 
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        // back button was pressed.  We know this is true because self is no longer
+        // in the navigation stack.
+        
+        [self.appDelegate.mpcHandler setDelegate:nil];
+    }
+    [super viewWillDisappear:animated];
+}
+
+
+
 #pragma mark - MAMPCHandlerDelegate
 
 - (void)peerStateChanged:(NSDictionary *)userInfo
 {
-    int nCount = (int)[[self.appDelegate.mpcHandler.session connectedPeers] count];
-    [self performSelectorOnMainThread:@selector(refreshStatus:) withObject:[NSNumber numberWithInt:nCount] waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(refreshStatus) withObject:nil waitUntilDone:NO];
 }
 
-- (void)peerDataReceived:(NSDictionary *)dataInfo
+- (void)peerDataReceived:(MAMessage *)message;
 {
-    MCPeerID *peerID = [dataInfo objectForKey:@"peerID"];
-    NSData *data = [dataInfo objectForKey:@"data"];
-    NSString *text = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    JSMessage *message = [[JSMessage alloc] init];
-    message.sender = [peerID displayName];
-    message.text = text;
-    message.mediaType = JSBubbleMediaTypeText;
-    message.messageStyle = JSBubbleMessageStyleFlat;
-    message.messageType = JSBubbleMessageTypeIncoming;
-    message.timestamp = [NSDate date];
-    
     [self performSelectorOnMainThread:@selector(dataReceived:) withObject:message waitUntilDone:NO];
-    //[self dataReceived:dataInfo];
 }
 
 
@@ -160,24 +153,17 @@
 
 #pragma mark - refresh status
 
-- (void)refreshStatus:(NSNumber *)count
+- (void)refreshStatus
 {
-    int nCount = [count intValue];
+    NSUInteger nCount = [self.appDelegate.mpcHandler numberOfConnectedPeers];
     if (nCount == 0)
     {
         self.lblStatus.text = @"You are the only one here";
     }
     else
     {
-        self.lblStatus.text = [NSString stringWithFormat:@"%d people chatting", nCount + 1];
+        self.lblStatus.text = [NSString stringWithFormat:@"%d people chatting", (int)nCount + 1];
     }
-}
-
-
-- (IBAction)settingsPressed:(id)sender
-{
-    [self.appDelegate.mpcHandler stop];
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Table view data source
@@ -192,31 +178,8 @@
     
     [JSMessageSoundEffect playMessageSentSound];
     
-//    [self.messageArray addObject:[NSDictionary dictionaryWithObject:text forKey:@"Text"]];
-//    [self.timestamps addObject:[NSDate date]];
-//    if((self.messageArray.count - 1) % 2)
-//        [JSMessageSoundEffect playMessageSentSound];
-//    else
-//        [JSMessageSoundEffect playMessageReceivedSound];
-    
-    JSMessage *message = [[JSMessage alloc] init];
-    message.text = text;
-    message.sender = [self.appDelegate.mpcHandler.peerID displayName];
-    message.messageType = JSBubbleMessageTypeOutgoing;
-    message.mediaType = JSBubbleMediaTypeText;
-    message.messageStyle = JSBubbleMessageStyleFlat;
-    message.timestamp = [NSDate date];
-    
+    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithText:text];
     [self.messageArray addObject:message];
-    
-    NSData *data = [text dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error = nil;
-    if (![self.appDelegate.mpcHandler.session sendData:data
-                                               toPeers:self.appDelegate.mpcHandler.session.connectedPeers
-                                              withMode:MCSessionSendDataReliable
-                                                 error:&error]) {
-        NSLog(@"[Error] %@", error);
-    }
     
     [self finishSend];
 }
@@ -231,21 +194,21 @@
 
 - (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    JSMessage *message = [self.messageArray objectAtIndex:indexPath.row];
-    return message.messageType;
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    return message.jsmessage.messageType;
     //return (indexPath.row % 2) ? JSBubbleMessageTypeIncoming : JSBubbleMessageTypeOutgoing;
 }
 
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    JSMessage *message = [self.messageArray objectAtIndex:indexPath.row];
-    return message.messageStyle;
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    return message.jsmessage.messageStyle;
     //return JSBubbleMessageStyleFlat;
 }
 
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath{
-    JSMessage *message = [self.messageArray objectAtIndex:indexPath.row];
-    return message.mediaType;
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    return message.jsmessage.mediaType;
     
 //    if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"]){
 //        return JSBubbleMediaTypeText;
@@ -313,8 +276,8 @@
 #pragma mark - Messages view data source
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    JSMessage *message = [self.messageArray objectAtIndex:indexPath.row];
-    return message.text;
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    return message.jsmessage.text;
     
 //    if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"]){
 //        return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"];
@@ -324,15 +287,15 @@
 
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    JSMessage *message = [self.messageArray objectAtIndex:indexPath.row];
-    return message.timestamp;
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    return message.jsmessage.timestamp;
 //    return [self.timestamps objectAtIndex:indexPath.row];
 }
 
 - (NSString *)senderForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    JSMessage *message = [self.messageArray objectAtIndex:indexPath.row];
-    return message.sender;
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    return message.jsmessage.sender;
 }
 
 - (UIImage *)avatarImageForIncomingMessage
@@ -346,8 +309,8 @@
 }
 
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
-    JSMessage *message = [self.messageArray objectAtIndex:indexPath.row];
-    return message.image;
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    return message.jsmessage.image;
     
 //    if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
 //        return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"];
@@ -363,6 +326,7 @@
 {
 	NSLog(@"Chose image!  Details:  %@", info);
     
+    /*
     self.willSendImage = [info objectForKey:UIImagePickerControllerEditedImage];
     //[self.messageArray addObject:[NSDictionary dictionaryWithObject:self.willSendImage forKey:@"Image"]];
     //[self.timestamps addObject:[NSDate date]];
@@ -374,12 +338,14 @@
     message.messageStyle = JSBubbleMessageStyleFlat;
     message.timestamp = [NSDate date];
     
+    
+    
     [self.messageArray addObject:message];
     
     [self.tableView reloadData];
     [self scrollToBottomAnimated:YES];
     
-	
+	*/
     [self dismissViewControllerAnimated:YES completion:NULL];
     
 }

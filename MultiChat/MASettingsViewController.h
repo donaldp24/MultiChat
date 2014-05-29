@@ -1,5 +1,5 @@
 //
-//  MAViewController.h
+//  MASettubgsViewController.h
 //  MultiChat
 //
 //  Created by Donald Pae on 5/21/14.
@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
-@interface MAViewController : UIViewController <UITextFieldDelegate>
+@interface MASettingsViewController : UIViewController <UITextFieldDelegate>
 
 @end

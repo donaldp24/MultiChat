@@ -13,4 +13,6 @@
 
 @interface MAChatViewController : JSMessagesViewController <MAMPCHandlerDelegate>
 
+@property (nonatomic, strong) MCPeerID *receiverPeerID;
+
 @end

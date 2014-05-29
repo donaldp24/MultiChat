@@ -10,10 +10,10 @@
 
 @interface MAGlobalData : NSObject
 
+@property (nonatomic, strong) NSString *deviceToken;
+@property (nonatomic, strong) NSString *userName;
+
 + (MAGlobalData *)sharedData;
 
-- (BOOL)isSetName;
-- (NSString *)getName;
-- (void)setName:(NSString *)name;
 
 @end

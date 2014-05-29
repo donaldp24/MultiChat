@@ -9,6 +9,7 @@
 #import "MAGlobalData.h"
 
 #define kUserNameKey    @"username"
+#define kDeviceTokenKey @"devicetoken"
 
 static MAGlobalData *_sharedData;
 
@@ -23,34 +24,45 @@ static MAGlobalData *_sharedData;
 - (id)init
 {
     self = [super init];
+    if (self) {
+        NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+        NSString *userName = [userDefault objectForKey:kUserNameKey];
+        if (userName != nil && ![userName isEqualToString:@""])
+        {
+            _userName = [NSString stringWithFormat:@"%@", userName];
+        }
+        else
+        {
+            _userName = [NSString stringWithFormat:@"%@", [UIDevice currentDevice].name];
+        }
+        
+        NSString *deviceToken = [userDefault objectForKey:kDeviceTokenKey];
+        if (deviceToken != nil && ![deviceToken isEqualToString:@""])
+        {
+            _deviceToken = [NSString stringWithFormat:@"%@", deviceToken];
+        }
+        else
+        {
+            CFUUIDRef uuid = CFUUIDCreate(NULL);
+            _deviceToken = [NSString stringWithFormat:@"%@", (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, uuid))];
+        }
+    }
     return self;
 }
 
-- (BOOL)isSetName
+- (void)setUserName:(NSString *)userName
 {
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSString *userName = [userDefault objectForKey:kUserNameKey];
-    if (userName != nil && ![userName isEqualToString:@""])
-    {
-        return YES;
-    }
-    return NO;
+    _userName = userName;
+    
+    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@", _userName] forKey:kUserNameKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (NSString *)getName
+- (void)setDeviceToken:(NSString *)deviceToken
 {
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSString *userName = [userDefault objectForKey:kUserNameKey];
-    if (userName != nil && ![userName isEqualToString:@""])
-    {
-        return [NSString stringWithFormat:@"%@", userName];
-    }
-    return [NSString stringWithFormat:@"%@", [UIDevice currentDevice].name];
-}
-
-- (void)setName:(NSString *)name
-{
-    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@", name] forKey:kUserNameKey];
+    _deviceToken = deviceToken;
+    
+    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@", _deviceToken] forKey:kDeviceTokenKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 

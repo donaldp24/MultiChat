@@ -16,6 +16,7 @@ typedef enum {
 typedef enum {
     JSBubbleMediaTypeText = 0,
     JSBubbleMediaTypeImage,
+    JSBubbleMediaTypeSpeech
 }JSBubbleMediaType;
 
 typedef enum {
@@ -27,15 +28,22 @@ typedef enum {
 
 
 
+
+
+
 @interface JSMessage : NSObject
 
 @property (strong, nonatomic) NSString *sender;
+
 @property (strong, nonatomic) NSString *text;
 @property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic) NSData *speech;
 @property (nonatomic) JSBubbleMessageType messageType;
 @property (nonatomic) JSBubbleMediaType mediaType;
 @property (nonatomic) JSBubbleMessageStyle messageStyle;
 
 @property (strong, nonatomic) NSDate *timestamp;
+
+
 
 @end

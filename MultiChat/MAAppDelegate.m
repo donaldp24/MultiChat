@@ -7,6 +7,7 @@
 //
 
 #import "MAAppDelegate.h"
+#import "MAGlobalData.h"
 
 @implementation MAAppDelegate
 
@@ -15,7 +16,27 @@
     // Override point for customization after application launch.
     self.mpcHandler = [[MAMPCHandler alloc] init];
     
+    // APNS register
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    
     return YES;
+}
+
+
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+    [MAGlobalData sharedData].deviceToken = [NSString stringWithFormat:@"%@", deviceToken];
+    
+	NSLog(@"My token is: %@", deviceToken);
+    
+    [self.mpcHandler stop];
+    [self.mpcHandler start:[MAGlobalData sharedData].userName];
+	
+}
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+	NSLog(@"Failed to get token, error: %@", error);
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

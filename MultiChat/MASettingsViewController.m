@@ -6,15 +6,16 @@
 //  Copyright (c) 2014 donald. All rights reserved.
 //
 
-#import "MAViewController.h"
+#import "MASettingsViewController.h"
 #import "MAAppDelegate.h"
 #import "MAGlobalData.h"
+#import "MAUIManager.h"
 
 static CGFloat textFieldsLowerPos = 237.0;
 
 
 
-@interface MAViewController () {
+@interface MASettingsViewController () {
     UIResponder *currentResponder;
 }
 
@@ -30,7 +31,7 @@ static CGFloat textFieldsLowerPos = 237.0;
 
 @end
 
-@implementation MAViewController
+@implementation MASettingsViewController
 
 - (void)viewDidLoad
 {
@@ -46,13 +47,7 @@ static CGFloat textFieldsLowerPos = 237.0;
     [self.view addGestureRecognizer:tap];
     
     self.appDelegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
-    
 
-    if ([[MAGlobalData sharedData] isSetName])
-    {
-        [self.appDelegate.mpcHandler start:[[MAGlobalData sharedData] getName]];
-        [self performSegueWithIdentifier:@"gointo" sender:self];
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -64,18 +59,19 @@ static CGFloat textFieldsLowerPos = 237.0;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //self.navigationController.navigationBarHidden = YES;
     
-    self.navigationItem.title = @"MultiChat";
-    
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
+    MAUIManager *uimanager = [MAUIManager sharedUIManager];
     
     self.navigationController.navigationBarHidden = NO;
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithRed:197/255.0 green:0/255.0 blue:27/255.0 alpha:1.0]];
+    
+    self.navigationItem.title = [uimanager appTitle];
+    
+    self.navigationController.navigationBar.barStyle = [uimanager navbarStyle];
+    
+    self.navigationController.navigationBar.tintColor = [uimanager navbarTintColor];
+    self.navigationController.navigationBar.titleTextAttributes = [uimanager navbarTitleTextAttributes];
+    
+    self.navigationController.navigationBar.barTintColor = [uimanager navbarBarTintColor];
 }
 
 - (void) initializeTextFields {
@@ -84,8 +80,7 @@ static CGFloat textFieldsLowerPos = 237.0;
     _usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     _usernameTextField.spellCheckingType = UITextSpellCheckingTypeNo;
-    _usernameTextField.text = [[MAGlobalData sharedData] getName];
-    
+    _usernameTextField.text = [[MAGlobalData sharedData] userName];
     _submitButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _submitButton.backgroundColor = [UIColor colorWithRed:221/255.0 green:35/255.0 blue:45/255.0 alpha:1.0];
     
@@ -135,11 +130,12 @@ static CGFloat textFieldsLowerPos = 237.0;
         [currentResponder resignFirstResponder];
     }
     
-    [[MAGlobalData sharedData] setName:[_usernameTextField text]];
+    [[MAGlobalData sharedData] setUserName:[_usernameTextField text]];
     
-    [self.appDelegate.mpcHandler start:[_usernameTextField text]];
+    //[self.appDelegate.mpcHandler start:[_usernameTextField text]];
     
-    [self performSegueWithIdentifier:@"gointo" sender:self];
+    //[self performSegueWithIdentifier:@"gointo" sender:self];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (UITextField *)loginTextFieldForIcon:(NSString *)filename placeholder:(NSString *)placeholder {

@@ -12,17 +12,17 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="2ml-Un-LD9"/>
+                        <segue destination="Ef0-2Y-jmS" kind="relationship" relationship="rootViewController" id="NcP-Fx-DUX"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kd8-r4-Kgj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-600" y="49"/>
         </scene>
-        <!--View Controller-->
+        <!--Settings View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="MAViewController" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="MASettingsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -45,13 +45,60 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Dhx-Cc-FqV"/>
-                    <connections>
-                        <segue destination="ubq-ct-hin" kind="push" identifier="gointo" id="Uf3-iB-U01"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-141" y="49"/>
+            <point key="canvasLocation" x="315" y="535"/>
+        </scene>
+        <!--People View Controller-->
+        <scene sceneID="Lde-LH-SA7">
+            <objects>
+                <viewController id="Ef0-2Y-jmS" customClass="MAPeopleViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hXI-MI-4ul"/>
+                        <viewControllerLayoutGuide type="bottom" id="YWt-hG-fOu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aUo-SE-03V">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="y8t-NP-Ccz">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="TAi-QG-j0v">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Ef0-2Y-jmS" id="vIJ-4I-Ckd"/>
+                                    <outlet property="delegate" destination="Ef0-2Y-jmS" id="ssg-Bs-xfg"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="y8t-NP-Ccz" firstAttribute="top" secondItem="aUo-SE-03V" secondAttribute="top" id="3QS-d0-ypK"/>
+                            <constraint firstItem="TAi-QG-j0v" firstAttribute="top" secondItem="hXI-MI-4ul" secondAttribute="bottom" id="4Xm-q7-kQB"/>
+                            <constraint firstItem="y8t-NP-Ccz" firstAttribute="leading" secondItem="aUo-SE-03V" secondAttribute="leading" id="Ad7-CH-IrA"/>
+                            <constraint firstItem="TAi-QG-j0v" firstAttribute="leading" secondItem="aUo-SE-03V" secondAttribute="leading" id="LPK-jn-fVH"/>
+                            <constraint firstAttribute="trailing" secondItem="y8t-NP-Ccz" secondAttribute="trailing" id="QJj-uN-rfv"/>
+                            <constraint firstItem="YWt-hG-fOu" firstAttribute="top" secondItem="y8t-NP-Ccz" secondAttribute="bottom" id="Thy-X0-K5h"/>
+                            <constraint firstItem="YWt-hG-fOu" firstAttribute="top" secondItem="TAi-QG-j0v" secondAttribute="bottom" id="ciu-9h-m9f"/>
+                            <constraint firstAttribute="trailing" secondItem="TAi-QG-j0v" secondAttribute="trailing" id="y8o-bW-AvQ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="ky3-b6-CUy"/>
+                    <connections>
+                        <outlet property="tblPeople" destination="TAi-QG-j0v" id="nGt-Qd-zVR"/>
+                        <segue destination="ubq-ct-hin" kind="push" identifier="gochat" id="yfX-04-OPi"/>
+                        <segue destination="vXZ-lx-hvc" kind="push" identifier="gosettings" id="iwx-hh-CoZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SRV-v1-l9q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-179" y="56"/>
         </scene>
         <!--Chat View Controller-->
         <scene sceneID="99L-RS-ziX">
@@ -82,7 +129,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="92E-jP-G4a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="265" y="43"/>
+            <point key="canvasLocation" x="315" y="-195"/>
         </scene>
     </scenes>
     <resources>
