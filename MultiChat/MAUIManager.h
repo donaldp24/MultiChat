@@ -20,5 +20,11 @@
 - (UIColor *)navbarBarTintColor;
 
 - (NSString *)peopleTitle;
+- (NSString *)settingsTitle;
+
+- (UIImage *)getDefaultAvatar;
+- (UIImage *)getPeopleAvatar;
+
+- (NSString *)getDefaultAvatarImageName;
 
 @end

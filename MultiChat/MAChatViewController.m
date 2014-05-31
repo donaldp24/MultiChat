@@ -10,6 +10,8 @@
 #import "MAAppDelegate.h"
 #import "MAMessage.h"
 #import "LCVoice.h"
+#import "MAGlobalData.h"
+#import "MAUIManager.h"
 
 @interface MAChatViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -75,6 +77,9 @@
     [self.view addSubview:self.lblStatus];
     //[self.lblStatus setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     
+    NSMutableArray *array = nil;
+    [self.appDelegate.mpcHandler getMessages:self.receiverPeerUid array:&array isReading:YES];
+    self.messageArray = [[NSMutableArray alloc] initWithArray:array];
     
     [self refreshStatus];
 }
@@ -89,10 +94,34 @@
 {
     [super viewWillAppear:animated];
     
-    if (self.receiverPeerID == nil)
+    if (self.receiverPeerUid == nil || [self.receiverPeerUid isEqualToString:@""])
         self.navigationItem.title = @"Everyone";
     else
-        self.navigationItem.title = [NSString stringWithFormat:@"%@", [self.receiverPeerID displayName]];
+    {
+        NSMutableArray *array = nil;
+        [self.appDelegate.mpcHandler getPeers:&array];
+        
+        NSString *name = @"Not Connected";
+        for (NSDictionary *dic in array)
+        {
+            
+            if (dic != nil)
+            {
+                NSArray *values = [dic allValues];
+                NSArray *keys = [dic allKeys];
+                if (keys != nil && keys.count != 0)
+                {
+                    if ([self.receiverPeerUid isEqualToString:[keys objectAtIndex:0]])
+                    {
+                        if (values != nil && values.count != 0)
+                            name = [values objectAtIndex:0];
+                        break;
+                    }
+                }
+            }
+        }
+        self.navigationItem.title = [NSString stringWithFormat:@"%@", name];
+    }
     
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     
@@ -137,30 +166,58 @@
 
 - (void)peerStateChanged:(NSDictionary *)userInfo
 {
-    [self performSelectorOnMainThread:@selector(refreshStatus) withObject:nil waitUntilDone:NO];
+    //[self performSelectorOnMainThread:@selector(refreshStatus) withObject:nil waitUntilDone:NO];
+    [self refreshStatus];
 }
 
 - (void)peerDataReceived:(MAMessage *)message;
 {
-    [self performSelectorOnMainThread:@selector(dataReceived:) withObject:message waitUntilDone:NO];
+    //[self performSelectorOnMainThread:@selector(dataReceived:) withObject:message waitUntilDone:NO];
+    [self dataReceived:message];
 }
 
 
 - (void)dataReceived:(id)data
 {
+    MAMessage *message = (MAMessage*)data;
+    if (message.isInfo == YES)
+        return;
+    
     [JSMessageSoundEffect playMessageReceivedSound];
     
-    [self.messageArray addObject:data];
     
-    [self.tableView reloadData];
-    [self scrollToBottomAnimated:YES];
+    BOOL isMine = NO;
+    if ([self.receiverPeerUid isEqualToString:@""])
+    {
+        if ([message.receiverUid isEqualToString:@""])
+            isMine = YES;
+    }
+    else
+    {
+        if ([message.senderUid isEqualToString:self.receiverPeerUid] &&
+            [message.receiverUid isEqualToString:[MAGlobalData sharedData].uid])
+        {
+            isMine = YES;
+        }
+    }
+    
+    if (isMine)
+    {
+        message.isRead = YES;
+        
+        [self.messageArray addObject:data];
+        
+        [self.tableView reloadData];
+        [self scrollToBottomAnimated:YES];
+
+    }
 }
 
 #pragma mark - refresh status
 
 - (void)refreshStatus
 {
-    NSUInteger nCount = [self.appDelegate.mpcHandler numberOfConnectedPeers];
+    NSUInteger nCount = [self.appDelegate.mpcHandler numberOfConnectedPeers:self.receiverPeerUid];
     if (nCount == 0)
     {
         self.lblStatus.text = @"You are the only one here";
@@ -183,18 +240,35 @@
     
     [JSMessageSoundEffect playMessageSentSound];
     
-    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithText:text];
+    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithText:text uid:self.receiverPeerUid];
     [self.messageArray addObject:message];
     
     [self finishSend];
 }
 
 - (void)cameraPressed:(id)sender{
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.allowsEditing = YES;
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    [self presentViewController:picker animated:YES completion:NULL];
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Take Photo" otherButtonTitles:@"Choose Existing", nil];
+    [actionSheet showInView:self.view];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0 || buttonIndex == 1)
+    {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.allowsEditing = YES;
+        if (buttonIndex == 0)
+        {
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        }
+        else if (buttonIndex == 1)
+        {
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        }
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -248,8 +322,8 @@
      JSMessagesViewAvatarPolicyBoth,
      JSMessagesViewAvatarPolicyNone
      */
-    //return JSMessagesViewAvatarPolicyBoth;
-    return JSMessagesViewAvatarPolicyNone;
+    return JSMessagesViewAvatarPolicyBoth;
+    //return JSMessagesViewAvatarPolicyNone;
 }
 
 - (JSAvatarStyle)avatarStyle
@@ -303,14 +377,20 @@
     return message.jsmessage.sender;
 }
 
-- (UIImage *)avatarImageForIncomingMessage
+- (UIImage *)avatarImageForIncomingMessageAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [UIImage imageNamed:@"demo-avatar-jobs"];
+    if (indexPath.row >= self.messageArray.count)
+        return [[MAUIManager sharedUIManager] getDefaultAvatar];
+    MAMessage *message = [self.messageArray objectAtIndex:indexPath.row];
+    UIImage *img = [self.appDelegate.mpcHandler getAvatar:message.senderUid];
+    if (img == nil)
+        img = [[MAUIManager sharedUIManager] getDefaultAvatar];
+    return img;
 }
 
-- (UIImage *)avatarImageForOutgoingMessage
+- (UIImage *)avatarImageForOutgoingMessageAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [UIImage imageNamed:@"demo-avatar-woz"];
+    return [MAGlobalData sharedData].avatarImage;
 }
 
 - (id)imageForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -342,7 +422,7 @@
     UIImage * image = [info objectForKey:UIImagePickerControllerEditedImage];
     UIImage * smallImg;
     //if (image.size.width > 800) {
-        smallImg = [self imageResize:image andResizeTo:CGSizeMake(100, 100)];
+        smallImg = [self imageResize:image andResizeTo:CGSizeMake(50, 50)];
     //} else {
     //    smallImg = image;
     //}
@@ -371,7 +451,7 @@
     
     [JSMessageSoundEffect playMessageSentSound];
     
-    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithImage:smallImg];
+    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithImage:smallImg uid:self.receiverPeerUid];
     [self.messageArray addObject:message];
     
     [self finishSend];
@@ -427,7 +507,7 @@
             {
                 NSData *voicedata = [[NSFileManager defaultManager] contentsAtPath:self.voice.recordPath];
                 
-                MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithSpeech:voicedata];
+                MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithSpeech:voicedata uid:self.receiverPeerUid];
                 [self.messageArray addObject:message];
                 
                 [self finishSend];

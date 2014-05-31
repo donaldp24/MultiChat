@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 #import "MAMessage.h"
-#import "MAPeerID.h"
 
 #define kServiceType    @"ma-chat"
-#define kInviteTimeout  10
-#define kFoundPeerTimeout   10
+#define kInviteTimeout  30
+#define kFoundPeerTimeout   30
 
-#define kDiscoveryUidKey    @"uid"
+//#define kDiscoveryUidKey    @"uid"
+#define kDiscoveryUsernameKey @"username"
 
 @protocol MAMPCHandlerDelegate <NSObject>
 
@@ -31,13 +31,22 @@
 
 - (void)start:(NSString *)displayName;
 - (void)stop;
+- (void)restart;
 - (BOOL)isStarted;
-- (NSUInteger)numberOfConnectedPeers;
+- (NSUInteger)numberOfConnectedPeers:(NSString *)uid;
 - (void)getPeers:(NSMutableArray **)peersArray;
-- (MAMessage *)sendMessageWithText:(NSString *)text;
-- (MAMessage *)sendMessageWithText:(NSString *)text peerID:(MAPeerID *)targetPeerID;
-- (MAMessage *)sendMessageWithImage:(UIImage *)image;
-- (MAMessage *)sendMessageWithSpeech:(NSData *)speech;
+- (void)getMessages:(NSString *)uid array:(NSMutableArray **)messageArray isReading:(BOOL)isReading;
+- (int)getUnreadMessageCount:(NSString *)uid;
+//- (MAMessage *)sendMessageWithText:(NSString *)text;
+- (MAMessage *)sendMessageWithText:(NSString *)text uid:(NSString *)targetUid;
+//- (MAMessage *)sendMessageWithImage:(UIImage *)image;
+- (MAMessage *)sendMessageWithImage:(UIImage *)image uid:(NSString *)targetUid;
+//- (MAMessage *)sendMessageWithSpeech:(NSData *)speech;
+- (MAMessage *)sendMessageWithSpeech:(NSData *)speech uid:(NSString *)targetUid;
+
+- (MAMessage *)sendAvatar:(UIImage *)avatar uid:(NSString *)targetUid;
+
+- (UIImage *)getAvatar:(NSString *)uid;
 
 
 @end

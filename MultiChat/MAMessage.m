@@ -25,7 +25,7 @@
                 self.jsmessage.text = [aDecoder decodeObjectForKey:kMessageTextKey];
                 break;
             case JSBubbleMediaTypeImage:
-                self.jsmessage.image = [aDecoder decodeObjectForKey:kMessageImageKey];
+                self.jsmessage.image = [UIImage imageWithData:[aDecoder decodeObjectForKey:kMessageImageKey]];
                 break;
             case JSBubbleMediaTypeSpeech:
                 self.jsmessage.text = @"....)))  ";
@@ -40,6 +40,10 @@
         // sender and receiver
         self.senderUid = [aDecoder decodeObjectForKey:kMessageSenderUidKey];
         self.receiverUid = [aDecoder decodeObjectForKey:kMessageReceiverUidKey];
+        
+        self.isInfo = [[aDecoder decodeObjectForKey:kMessageInfoKey] boolValue];
+        
+        self.isRead = NO;
     }
     
     return self;
@@ -57,7 +61,7 @@
             [aCoder encodeObject:self.jsmessage.text forKey:kMessageTextKey];
             break;
         case JSBubbleMediaTypeImage:
-            [aCoder encodeObject:self.jsmessage.image forKey:kMessageImageKey];
+            [aCoder encodeObject:UIImageJPEGRepresentation(self.jsmessage.image, 75/100.0) forKey:kMessageImageKey];
             break;
         case JSBubbleMediaTypeSpeech:
             [aCoder encodeObject:self.jsmessage.text forKey:kMessageTextKey];
@@ -74,6 +78,8 @@
     // encode sender Uid and receiver Uid
     [aCoder encodeObject:self.senderUid forKey:kMessageSenderUidKey];
     [aCoder encodeObject:self.receiverUid forKey:kMessageReceiverUidKey];
+    
+    [aCoder encodeObject:[NSNumber numberWithBool:self.isInfo] forKey:kMessageInfoKey];
 }
 
 

@@ -22,12 +22,10 @@ static CGFloat textFieldsLowerPos = 237.0;
 @property (strong, nonatomic) MAAppDelegate *appDelegate;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgBg;
-@property (strong, nonatomic) UIView *loginGroup;
+@property (strong, nonatomic) IBOutlet UIButton *avatar;
+@property (strong, nonatomic) IBOutlet UIImageView *imgAvatar;
 
-@property (strong, nonatomic) UITextField *usernameTextField;
-@property (strong, nonatomic) UIButton *submitButton;
-
-@property (strong, nonatomic) MASConstraint *loginGroupTopConstraint;
+@property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
 
 @end
 
@@ -39,14 +37,29 @@ static CGFloat textFieldsLowerPos = 237.0;
 	// Do any additional setup after loading the view, typically from a nib.
     
     // title
-    self.navigationItem.hidesBackButton = YES;
-    
-    [self initializeTextFields];
+    self.navigationItem.hidesBackButton = NO;
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTap:)];
     [self.view addGestureRecognizer:tap];
     
     self.appDelegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    
+    self.imgAvatar.layer.cornerRadius = self.avatar.frame.size.height / 2;
+    self.imgAvatar.layer.masksToBounds = YES;
+    self.imgAvatar.layer.borderWidth = 0;
+    self.imgAvatar.image = [MAGlobalData sharedData].avatarImage;
+    
+    
+    self.usernameTextField.layer.cornerRadius = 3.0;
+    self.usernameTextField.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    self.usernameTextField.layer.borderWidth = 1.0;
+    self.usernameTextField.text = [[MAGlobalData sharedData] userName];
+    
+    UIView *spacerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    [self.usernameTextField setLeftViewMode:UITextFieldViewModeAlways];
+    [self.usernameTextField setLeftView:spacerView];
+
 
 }
 
@@ -64,7 +77,7 @@ static CGFloat textFieldsLowerPos = 237.0;
     
     self.navigationController.navigationBarHidden = NO;
     
-    self.navigationItem.title = [uimanager appTitle];
+    self.navigationItem.title = [uimanager settingsTitle];
     
     self.navigationController.navigationBar.barStyle = [uimanager navbarStyle];
     
@@ -72,108 +85,6 @@ static CGFloat textFieldsLowerPos = 237.0;
     self.navigationController.navigationBar.titleTextAttributes = [uimanager navbarTitleTextAttributes];
     
     self.navigationController.navigationBar.barTintColor = [uimanager navbarBarTintColor];
-}
-
-- (void) initializeTextFields {
-    
-    _usernameTextField = [self loginTextFieldForIcon:@"login-username" placeholder:@"NAME"];
-    _usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    _usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    _usernameTextField.spellCheckingType = UITextSpellCheckingTypeNo;
-    _usernameTextField.text = [[MAGlobalData sharedData] userName];
-    _submitButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _submitButton.backgroundColor = [UIColor colorWithRed:221/255.0 green:35/255.0 blue:45/255.0 alpha:1.0];
-    
-    _submitButton.tintColor = [UIColor whiteColor];
-    _submitButton.layer.cornerRadius = 5.0;
-    [_submitButton setTitle:@"Enter" forState:UIControlStateNormal];
-    [_submitButton addTarget:self action:@selector(onLogin:) forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    _loginGroup = [UIView new];
-    _loginGroup.backgroundColor = [UIColor clearColor];
-    
-
-    [_loginGroup addSubview:_usernameTextField];
-
-    [_loginGroup addSubview:_submitButton];
-
-    [self.view addSubview:_loginGroup];
-    
-    
-    [_usernameTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@42.0);
-        make.width.equalTo(@260.0);
-        make.top.equalTo(@0);
-        make.left.equalTo(@0);
-        make.right.equalTo(@0);
-    }];
-    
-    
-    [_submitButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.equalTo(_usernameTextField);
-        make.left.equalTo(_usernameTextField);
-        make.top.equalTo(_usernameTextField.mas_bottom).with.offset(15.0);
-        make.bottom.equalTo(@0);
-    }];
-    
-    [_loginGroup mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(@0);
-        _loginGroupTopConstraint = make.top.equalTo(@(textFieldsLowerPos));
-    }];
-    
-    
-}
-
-- (IBAction)onLogin:(id)sender {
-    if (currentResponder) {
-        [currentResponder resignFirstResponder];
-    }
-    
-    [[MAGlobalData sharedData] setUserName:[_usernameTextField text]];
-    
-    //[self.appDelegate.mpcHandler start:[_usernameTextField text]];
-    
-    //[self performSegueWithIdentifier:@"gointo" sender:self];
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (UITextField *)loginTextFieldForIcon:(NSString *)filename placeholder:(NSString *)placeholder {
-    
-    //Gray background view
-    UIView *grayView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 45.0, 42.0)];
-    grayView.backgroundColor = [UIColor colorWithRed:0.67 green:0.70 blue:0.77 alpha:1.0];
-    
-    //Path & Mask so we only make rounded corners on right side
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:grayView.bounds
-                                                   byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerBottomLeft)
-                                                         cornerRadii:CGSizeMake(5.0, 5.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = grayView.bounds;
-    maskLayer.path = maskPath.CGPath;
-    grayView.layer.mask = maskLayer;
-    
-    //Add icon image
-    UIImageView *passwordIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:filename]];
-    [grayView addSubview:passwordIcon];
-    
-    [passwordIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(@0);
-        make.centerY.equalTo(@0);
-    }];
-    
-    //Finally make the textField
-    UITextField *textField = [[UITextField alloc] init];
-    textField.borderStyle = UITextBorderStyleRoundedRect;
-    textField.font = [UIFont systemFontOfSize:14.0];
-    textField.textColor = [UIColor blackColor];
-    textField.backgroundColor = [UIColor whiteColor];
-    textField.leftViewMode = UITextFieldViewModeAlways;
-    textField.leftView = grayView;
-    textField.placeholder = placeholder;
-    textField.delegate = self;
-    
-    return textField;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -186,12 +97,45 @@ static CGFloat textFieldsLowerPos = 237.0;
                                              selector:@selector(keyboardHiding:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+    
+    
+    
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    
+    [[MAGlobalData sharedData] setUserName:[_usernameTextField text]];
+    [self.appDelegate.mpcHandler sendAvatar:[MAGlobalData sharedData].avatarImage uid:@""];
 }
+
+- (IBAction)onAvatar:(id)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Take Photo" otherButtonTitles:@"Choose Existing", nil];
+    [actionSheet showInView:self.view];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0 || buttonIndex == 1)
+    {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.allowsEditing = YES;
+        if (buttonIndex == 0)
+        {
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        }
+        else if (buttonIndex == 1)
+        {
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        }
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+}
+
+
+
 
 
 # pragma mark Gesture selector
@@ -211,12 +155,6 @@ static CGFloat textFieldsLowerPos = 237.0;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     currentResponder = textField;
-    /*
-     if (textField == _usernameTextField && preFilledUsername) {
-     preFilledUsername = NO;
-     textField.text = @"";
-     }
-     */
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -224,35 +162,24 @@ static CGFloat textFieldsLowerPos = 237.0;
 }
 
 
-- (void) reset
-{
-    /*
-     if(self.currentAccount && loginState == LoginStateLoggingIn){
-     _usernameTextField.text = self.currentAccount.user.name;
-     preFilledUsername = YES;
-     } else {
-     _usernameTextField.text = @"";
-     preFilledUsername = NO;
-     }
-     */
-}
-
 #pragma mark Keyboard Methods
 
 - (void)keyboardShowing:(NSNotification *)note
 {
+    /*
     NSNumber *duration = note.userInfo[UIKeyboardAnimationDurationUserInfoKey];
-    //CGRect endFrame = ((NSValue *)note.userInfo[UIKeyboardFrameEndUserInfoKey]).CGRectValue;
     _loginGroupTopConstraint.with.offset(80.0);
     
     
     [UIView animateWithDuration:duration.floatValue animations:^{
         [self.view layoutIfNeeded];
     }];
+     */
 }
 
 - (void)keyboardHiding:(NSNotification *)note
 {
+    /*
     NSNumber *duration = note.userInfo[UIKeyboardAnimationDurationUserInfoKey];
     
     _loginGroupTopConstraint.with.offset(textFieldsLowerPos);
@@ -260,7 +187,47 @@ static CGFloat textFieldsLowerPos = 237.0;
     [UIView animateWithDuration:duration.floatValue animations:^{
         [self.view layoutIfNeeded];
     }];
+    */
+}
+
+#pragma UIImagePicker Delegate
+
+#pragma mark - Image picker delegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+	NSLog(@"Chose image!  Details:  %@", info);
+    
+    
+    UIImage * image = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage * smallImg;
+    smallImg = [self imageResize:image andResizeTo:CGSizeMake(100, 100)];
+    
+    [self.imgAvatar setImage:smallImg];
+    [[MAGlobalData sharedData] setAvatarImage:smallImg];
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
     
 }
+
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:NULL];
+    
+}
+
+-(UIImage *)imageResize :(UIImage*)img andResizeTo:(CGSize)newSize
+{
+    CGFloat scale = [[UIScreen mainScreen]scale];
+    
+    //UIGraphicsBeginImageContext(newSize);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, scale);
+    [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+
 
 @end

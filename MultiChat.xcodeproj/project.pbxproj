@@ -24,7 +24,8 @@
 		D3A8CB2D1936BF26000CBC32 /* wave70x117@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB271936BF26000CBC32 /* wave70x117@2x.png */; };
 		D3A8CB301936BF8E000CBC32 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A8CB2F1936BF8E000CBC32 /* AVFoundation.framework */; };
 		D3A8CB321936BFA6000CBC32 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A8CB311936BFA6000CBC32 /* QuartzCore.framework */; };
-		D3E6E99E193462500044F420 /* MAPeerID.m in Sources */ = {isa = PBXBuildFile; fileRef = D3E6E99D193462500044F420 /* MAPeerID.m */; };
+		D3C66DDD19389D3300598D77 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D3C66DDA19389D3300598D77 /* SVProgressHUD.bundle */; };
+		D3C66DDE19389D3300598D77 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D3C66DDC19389D3300598D77 /* SVProgressHUD.m */; };
 		D3FC8AAB192C44FF007519E2 /* MAChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC8AAA192C44FF007519E2 /* MAChatViewController.m */; };
 		D3FC9E51192C14520063A94D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FC9E50192C14520063A94D /* Foundation.framework */; };
 		D3FC9E53192C14520063A94D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3FC9E52192C14520063A94D /* CoreGraphics.framework */; };
@@ -148,8 +149,9 @@
 		D3A8CB271936BF26000CBC32 /* wave70x117@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wave70x117@2x.png"; sourceTree = "<group>"; };
 		D3A8CB2F1936BF8E000CBC32 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D3A8CB311936BFA6000CBC32 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		D3E6E99C193462500044F420 /* MAPeerID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAPeerID.h; sourceTree = "<group>"; };
-		D3E6E99D193462500044F420 /* MAPeerID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAPeerID.m; sourceTree = "<group>"; };
+		D3C66DDA19389D3300598D77 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		D3C66DDB19389D3300598D77 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		D3C66DDC19389D3300598D77 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		D3FC8AA9192C44FF007519E2 /* MAChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAChatViewController.h; sourceTree = "<group>"; };
 		D3FC8AAA192C44FF007519E2 /* MAChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAChatViewController.m; sourceTree = "<group>"; };
 		D3FC9E4D192C14520063A94D /* MultiChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -322,6 +324,17 @@
 			name = Resource;
 			sourceTree = "<group>";
 		};
+		D3C66DD919389D3300598D77 /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				D3C66DDA19389D3300598D77 /* SVProgressHUD.bundle */,
+				D3C66DDB19389D3300598D77 /* SVProgressHUD.h */,
+				D3C66DDC19389D3300598D77 /* SVProgressHUD.m */,
+			);
+			name = SVProgressHUD;
+			path = Library/SVProgressHUD;
+			sourceTree = "<group>";
+		};
 		D3FC9E44192C14520063A94D = {
 			isa = PBXGroup;
 			children = (
@@ -381,8 +394,6 @@
 				D36EE405193200D70052213D /* MAUIManager.m */,
 				D30E618419329B1C00FAE00C /* MAMessage.h */,
 				D30E618519329B1C00FAE00C /* MAMessage.m */,
-				D3E6E99C193462500044F420 /* MAPeerID.h */,
-				D3E6E99D193462500044F420 /* MAPeerID.m */,
 			);
 			path = MultiChat;
 			sourceTree = "<group>";
@@ -419,6 +430,7 @@
 		D3FC9E8A192C15580063A94D /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				D3C66DD919389D3300598D77 /* SVProgressHUD */,
 				D3A8CB1F1936BF26000CBC32 /* SoundRecorder */,
 				D3FE1465192E095C00563C4E /* MessagesTableViewController */,
 				D3FC9E8B192C157B0063A94D /* Masonry */,
@@ -611,9 +623,6 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = donald;
 				TargetAttributes = {
-					D3FC9E4C192C14520063A94D = {
-						DevelopmentTeam = GMQ956JNPM;
-					};
 					D3FC9E70192C14530063A94D = {
 						TestTargetID = D3FC9E4C192C14520063A94D;
 					};
@@ -693,6 +702,7 @@
 				D3A8CB2B1936BF26000CBC32 /* mic_normal_358x358@2x.png in Resources */,
 				D3FE14D5192E095C00563C4E /* bubble-square-outgoing-selected@2x.png in Resources */,
 				D3FE14E4192E095C00563C4E /* send.png in Resources */,
+				D3C66DDD19389D3300598D77 /* SVProgressHUD.bundle in Resources */,
 				D3FE14DC192E095C00563C4E /* input-bar.png in Resources */,
 				D3FE14BC192E095C00563C4E /* bubble-default-incoming-selected.png in Resources */,
 				D3FC9E5B192C14520063A94D /* InfoPlist.strings in Resources */,
@@ -729,7 +739,6 @@
 				D3FC9E61192C14520063A94D /* MAAppDelegate.m in Sources */,
 				D3FC9E6A192C14520063A94D /* MASettingsViewController.m in Sources */,
 				D3FC9EA5192C15890063A94D /* MASLayoutConstraint.m in Sources */,
-				D3E6E99E193462500044F420 /* MAPeerID.m in Sources */,
 				D3A8CB291936BF26000CBC32 /* LCVoice.m in Sources */,
 				D34503B8192C6EEC0003C326 /* MAMPCHandler.m in Sources */,
 				D3FE14E8192E095C00563C4E /* UIButton+JSMessagesView.m in Sources */,
@@ -737,6 +746,7 @@
 				D3FC9EAA192C15890063A94D /* View+MASAdditions.m in Sources */,
 				D332B181192CF76C00C5ABFF /* MAGlobalData.m in Sources */,
 				D3FC9EA6192C15890063A94D /* MASViewAttribute.m in Sources */,
+				D3C66DDE19389D3300598D77 /* SVProgressHUD.m in Sources */,
 				D3FC9EA3192C15890063A94D /* MASConstraint.m in Sources */,
 				D3FE14EA192E095C00563C4E /* UIImage+JSMessagesView.m in Sources */,
 				D3FC9EA4192C15890063A94D /* MASConstraintMaker.m in Sources */,

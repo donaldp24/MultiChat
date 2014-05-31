@@ -10,9 +10,14 @@
 #import "MAUIManager.h"
 #import "MAAppDelegate.h"
 #import "MAGlobalData.h"
+#import "MAChatViewController.h"
+#import "SVProgressHUD.h"
 
 @interface MAPeopleViewController () {
     NSString *prevName;
+    NSTimer *_timer;
+    UIBarButtonItem *_refreshButton;
+    int _degree;
 }
 
 @property (nonatomic, strong) IBOutlet UITableView *tblPeople;
@@ -40,10 +45,15 @@
     
     self.appDelegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    prevName = [NSString stringWithFormat:@"%@", [MAGlobalData sharedData].userName];
+    prevName = [NSString stringWithFormat:@"%@", [MAGlobalData sharedData].uid];
     
     // This will remove extra separators from tableview
-    self.tblPeople.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    //self.tblPeople.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tblPeople.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(20, 20, 20, 20)];
+    [self.tblPeople.tableFooterView addSubview:indicator];
+    [indicator setColor:[UIColor blackColor]];
+    [indicator startAnimating];
     
     // title
     self.navigationItem.hidesBackButton = YES;
@@ -52,6 +62,11 @@
     // settings button
     UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settingsicon"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsPressed:)];
     self.navigationItem.leftBarButtonItem = settingsButton;
+    
+    // refresh button
+    _refreshButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"refreshicon"] style:UIBarButtonItemStylePlain target:self action:@selector(refreshPressed:)];
+    self.navigationItem.rightBarButtonItem = _refreshButton;
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -89,24 +104,36 @@
     self.navigationController.navigationBar.barTintColor = [uimanager navbarBarTintColor];
     
     self.appDelegate.mpcHandler.delegate = self;
+    
     if ([self.appDelegate.mpcHandler isStarted])
     {
-        if (![[MAGlobalData sharedData].userName isEqualToString:prevName])
+        /*
+        if (![[MAGlobalData sharedData].uid isEqualToString:prevName])
         {
             [self.appDelegate.mpcHandler stop];
-            [self.appDelegate.mpcHandler start:[MAGlobalData sharedData].userName];
-            prevName = [NSString stringWithFormat:@"%@", [MAGlobalData sharedData].userName];
+            [self.appDelegate.mpcHandler start:[MAGlobalData sharedData].uid];
+            prevName = [NSString stringWithFormat:@"%@", [MAGlobalData sharedData].uid];
         }
+         */
     }
     else
-        [self.appDelegate.mpcHandler start:[MAGlobalData sharedData].userName];
+        [self.appDelegate.mpcHandler start:[MAGlobalData sharedData].uid];
+    
+    NSMutableArray *array = nil;
+    [self.appDelegate.mpcHandler getPeers:&array];
+    self.peopleArray = [[NSMutableArray alloc] initWithArray:array];
     
     [self.tblPeople reloadData];
+    
+    _degree = 0;
+    //_timer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(timerProc:) userInfo:nil repeats:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
+    [_timer invalidate];
 }
 
 - (void)settingsPressed:(id)sender
@@ -114,6 +141,15 @@
     [self performSegueWithIdentifier:@"gosettings" sender:self];
 }
 
+- (void)refreshPressed:(id)sender
+{
+    [self.appDelegate.mpcHandler restart];
+    
+    [self.tblPeople reloadData];
+    
+    [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeGradient];
+    [SVProgressHUD dismissAfterDelay:3];
+}
 
 #pragma mark MAMPCHandler Delegate
 - (void)peerStateChanged:(NSDictionary *)userInfo
@@ -124,7 +160,7 @@
 
 - (void)peerDataReceived:(MAMessage *)message
 {
-    //
+    [self.tblPeople reloadData];
 }
 
 - (void)peerStateChangedProc:(NSDictionary *)userInfo
@@ -153,27 +189,66 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     if (cell == nil)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        return cell;
     
-    }
+    NSString *receiverUid = @"";
     
-    cell.backgroundColor = [UIColor clearColor];
-    cell.textLabel.backgroundColor = [UIColor clearColor];
+    UIImageView *imgAvatar = (UIImageView *)[cell viewWithTag:101];
+    UILabel *lblName = (UILabel *)[cell viewWithTag:102];
+    UILabel *lblCount = (UILabel *)[cell viewWithTag:103];
+    
+    imgAvatar.layer.cornerRadius = imgAvatar.frame.size.height / 2;
+    imgAvatar.layer.masksToBounds = YES;
+    imgAvatar.layer.borderWidth = 1;
+    imgAvatar.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    
+    //imgAvatar.layer.shadowColor = [UIColor lightGrayColor].CGColor;
     
     if (indexPath.row == 0)
     {
-        cell.textLabel.text = @"Everyone";
+        imgAvatar.image = [[MAUIManager sharedUIManager] getPeopleAvatar];
+        lblName.text = @"Everyone";
+        
+        int count = [self.appDelegate.mpcHandler getUnreadMessageCount:@""];
+        if (count != 0)
+            lblCount.text = [NSString stringWithFormat:@"%d", count];
+        else
+            lblCount.text = @"";
     }
     else
     {
+        UIImage *avatar = nil;
         if (indexPath.row <= [self.peopleArray count])
         {
-            MCPeerID *peerID = [self.peopleArray objectAtIndex:indexPath.row - 1];
-            cell.textLabel.text = [NSString stringWithFormat:@"%@", [peerID displayName]];
+            NSDictionary *dic = [self.peopleArray objectAtIndex:indexPath.row - 1];
+            NSString *name = @"";
+            int count = 0;
+            if (dic != nil)
+            {
+                NSArray *values = [dic allValues];
+                if (values != nil && values.count != 0)
+                    name = [values objectAtIndex:0];
+                NSArray *keys = [dic allKeys];
+                if (keys != nil && keys.count != 0)
+                {
+                    receiverUid = [keys objectAtIndex:0];
+                    count = [self.appDelegate.mpcHandler getUnreadMessageCount:receiverUid];
+                    avatar = [self.appDelegate.mpcHandler getAvatar:receiverUid];
+                }
+            }
+            
+            if (avatar == nil)
+                avatar = [[MAUIManager sharedUIManager] getDefaultAvatar];
+            
+            imgAvatar.image = avatar;
+            lblName.text = [NSString stringWithFormat:@"%@", name];
+            
+            if (count != 0)
+                lblCount.text = [NSString stringWithFormat:@"%d", count];
+            else
+                lblCount.text = @"";
         }
     }
     return cell;
@@ -183,7 +258,73 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.appDelegate.mpcHandler setDelegate:nil];
-    [self performSegueWithIdentifier:@"gochat" sender:self];
+    
+    //[self performSegueWithIdentifier:@"gochat" sender:self];
+    MAChatViewController *chatview = [self.storyboard instantiateViewControllerWithIdentifier:@"MAChatViewController"];
+    
+    NSString *uid = @"";
+    if (indexPath.row == 0)
+    {
+        //
+    }
+    else
+    {
+        if (indexPath.row <= [self.peopleArray count])
+        {
+            NSDictionary *dic = [self.peopleArray objectAtIndex:indexPath.row - 1];
+            
+            if (dic != nil)
+            {
+                NSArray *keys = [dic allKeys];
+                if (keys != nil && keys.count != 0)
+                    uid = [keys objectAtIndex:0];
+            }
+        }
+    }
+    chatview.receiverPeerUid = uid;
+    
+    [self.navigationController pushViewController:chatview animated:YES];
+}
+
+- (void)timerProc:(NSTimer *)timer
+{
+    UIImage *img = [UIImage imageNamed:@"refreshicon"];
+    img = rotate(img, _degree);
+    _degree += 30;
+    if (_degree > 360)
+        _degree = _degree - 360;
+    [_refreshButton setImage:img];
+}
+
+static inline double radians (double degrees) {return degrees * M_PI/180;}
+
+UIImage* rotate(UIImage* src, int degree)
+{
+    UIGraphicsBeginImageContext(src.size);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+  /*
+
+    CGContextRotateCTM (context, radians(degree));
+
+    
+    [src drawAtPoint:CGPointMake(0, 0)];
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+   */
+    
+    // Move the origin to the middle of the image so we will rotate and scale around the center.
+    CGContextTranslateCTM(context, src.size.width/2, src.size.height/2);
+    
+    //Rotate the image context
+    CGContextRotateCTM(context, radians(degree));
+    
+    // Now, draw the rotated/scaled image into the context
+    CGContextScaleCTM(context, 1.0, -1.0);
+    CGContextDrawImage(context, CGRectMake(-src.size.width / 2, -src.size.height / 2,     src.size.width, src.size.height), src.CGImage);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 @end

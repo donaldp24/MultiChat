@@ -30,8 +30,8 @@
     
 	NSLog(@"My token is: %@", deviceToken);
     
-    [self.mpcHandler stop];
-    [self.mpcHandler start:[MAGlobalData sharedData].userName];
+    //[self.mpcHandler stop];
+    //[self.mpcHandler start:[MAGlobalData sharedData].uid];
 	
 }
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error

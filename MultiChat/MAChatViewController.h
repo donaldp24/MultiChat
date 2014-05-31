@@ -11,8 +11,8 @@
 
 #import "JSMessagesViewController.h"
 
-@interface MAChatViewController : JSMessagesViewController <MAMPCHandlerDelegate>
+@interface MAChatViewController : JSMessagesViewController <MAMPCHandlerDelegate, UIActionSheetDelegate>
 
-@property (nonatomic, strong) MCPeerID *receiverPeerID;
+@property (nonatomic, strong) NSString *receiverPeerUid;
 
 @end

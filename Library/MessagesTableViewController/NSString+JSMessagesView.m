@@ -37,7 +37,7 @@
 
 - (NSUInteger)numberOfLines
 {
-    return [self componentsSeparatedByString:@"\n"].count + 1;
+    return [self componentsSeparatedByString:@"\n"].count;
 }
 
 @end

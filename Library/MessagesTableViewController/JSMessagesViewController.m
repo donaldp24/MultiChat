@@ -275,6 +275,8 @@
 - (void)cameraAction:(id)sender
 {
     if(self.delegate && [self.delegate respondsToSelector:@selector(cameraPressed:)]){
+        if(!self.previousTextViewContentHeight)
+            self.previousTextViewContentHeight = self.inputToolBarView.textView.contentSize.height;
         [self.delegate cameraPressed:sender];
     }
 }
@@ -316,7 +318,7 @@
     BOOL hasTimestamp = [self shouldHaveTimestampForRowAtIndexPath:indexPath];
     BOOL hasAvatar = [self shouldHaveAvatarForRowAtIndexPath:indexPath];
     
-    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d", type, bubbleStyle, hasTimestamp, hasAvatar];
+    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d_%d", type, bubbleStyle, mediaType, hasTimestamp, hasAvatar];
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     
     if(!cell)
@@ -332,11 +334,11 @@
     if(hasAvatar) {
         switch (type) {
             case JSBubbleMessageTypeIncoming:
-                [cell setAvatarImage:[self.dataSource avatarImageForIncomingMessage]];
+                [cell setAvatarImage:[self.dataSource avatarImageForIncomingMessageAtIndexPath:indexPath]];
                 break;
                 
             case JSBubbleMessageTypeOutgoing:
-                [cell setAvatarImage:[self.dataSource avatarImageForOutgoingMessage]];
+                [cell setAvatarImage:[self.dataSource avatarImageForOutgoingMessageAtIndexPath:indexPath]];
                 break;
         }
     }

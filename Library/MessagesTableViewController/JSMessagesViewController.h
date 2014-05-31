@@ -90,8 +90,8 @@ typedef enum {
 - (NSString *)senderForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (UIImage *)avatarImageForIncomingMessage;
-- (UIImage *)avatarImageForOutgoingMessage;
+- (UIImage *)avatarImageForIncomingMessageAtIndexPath:(NSIndexPath *)indexPath;
+- (UIImage *)avatarImageForOutgoingMessageAtIndexPath:(NSIndexPath *)indexPath;
 @optional
 - (id)imageForRowAtIndexPath:(NSIndexPath *)indexPath;
 //-------- kim

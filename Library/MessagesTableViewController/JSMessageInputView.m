@@ -163,7 +163,7 @@ static id<JSMessageInputViewDelegate> __delegate;
 - (void)adjustTextViewHeightBy:(CGFloat)changeInHeight
 {
     CGRect prevFrame = self.textView.frame;
-    
+
     int numLines = MAX([self.textView numberOfLinesOfText],
                        [self.textView.text numberOfLines]);
 

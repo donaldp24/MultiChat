@@ -14,36 +14,27 @@
     BOOL _isStarted;
     BOOL _isConnected;
     
-    NSString *_advertisingPeer;
-    BOOL _isInvited;
-    
-    NSTimer *_timer;
-    int _lastTime;
+    NSMutableArray *_connectingPeers;
+    NSMutableArray *_connectedPeers;
+    double _lastTime;
     int _interval;
+    NSTimer *_timer;
     
-    int _lastInviteTime;
-    int _lastFoundPeerTime;
-    
-    NSMutableArray *_invitingPeers;
-    
-    
-    BOOL _isAdvertising;
 }
 
-@property (nonatomic, strong) MAPeerID *peerID;
+@property (nonatomic, strong) MCPeerID *peerID;
 @property (nonatomic, strong) MCSession *session;
 @property (nonatomic, strong) MCNearbyServiceBrowser *browser;
 @property (nonatomic, strong) MCNearbyServiceAdvertiser *advertiser;
 
 @property (nonatomic, strong) NSRecursiveLock *theLock;
-@property (nonatomic, strong) NSRecursiveLock *delegateLock;
 
 
-// user to store messages
-// {    key     : value }
-// { sender uid : array of MAMessage}
-@property (nonatomic, strong) NSMutableDictionary *messages;
+// {array of MAMessage}
+@property (nonatomic, strong) NSMutableArray *messages;
+@property (nonatomic, strong) NSMutableDictionary *avatars;
 
+// { uid : username }
 @property (nonatomic, strong) NSMutableDictionary *peers;
 
 
@@ -56,25 +47,24 @@
     self = [super init];
     
     self.theLock = [[NSRecursiveLock alloc] init];
-    self.delegateLock = [[NSRecursiveLock alloc] init];
     
     _isStarted = NO;
     _isConnected = NO;
     
-    self.messages = [[NSMutableDictionary alloc] init];
+    self.messages = [[NSMutableArray alloc] init];
     self.peers = [[NSMutableDictionary alloc] init];
     
-    _invitingPeers = [[NSMutableArray alloc] init];
+    _connectedPeers = [[NSMutableArray alloc] init];
+    _connectingPeers = [[NSMutableArray alloc] init];
     
+    self.avatars = [[NSMutableDictionary alloc] init];
     
     return self;
 }
 
 - (void)setDelegate:(id<MAMPCHandlerDelegate>)delegate
 {
-    [self.delegateLock lock];
     _delegate = delegate;
-    [self.delegateLock unlock];
 }
 
 
@@ -82,9 +72,9 @@
     [self.theLock lock];
     
     _isConnected = NO;
-    _advertisingPeer = nil;
-    [_invitingPeers removeAllObjects];
-
+    [_connectingPeers removeAllObjects];
+    [_connectedPeers removeAllObjects];
+    
     [self setupPeerWithDisplayName:displayName];
     
     [self setupSession];
@@ -95,7 +85,7 @@
     
     _isStarted = YES;
     
-    _interval = 3;
+    _interval = 10;
     _lastTime = [[NSDate date] timeIntervalSince1970];
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerProc:) userInfo:nil repeats:YES];
     
@@ -105,11 +95,12 @@
 - (void)stop {
 
     [self.theLock lock];
-    
+    /*
     if (_timer) {
         [_timer invalidate];
         _timer = nil;
     }
+     */
 
     [self stopBrowser];
     [self stopAdvertiser];
@@ -136,37 +127,111 @@
     if (self.session == nil || [self.session.connectedPeers count] <= 0)
     {
         *peersArray = array;
+        [self.theLock unlock];
         return;
     }
     
     for (int i = 0; i < self.session.connectedPeers.count; i++) {
         MCPeerID *peerID = [self.session.connectedPeers objectAtIndex:i];
+        
         NSArray *keys = [self.peers allKeys];
-        for (NSString *uid in keys) {
-            MCPeerID *regPeerID = [self.peers objectForKey:uid];
-            if ([regPeerID isEqual:peerID])
+        for (NSString *uid in keys)
+        {
+            NSString *userName = [self.peers objectForKey:uid];
+            if ([uid isEqualToString:[peerID displayName]])
             {
-                MAPeerID *maPeerID = [[MAPeerID alloc] init];
-                maPeerID.peerID = regPeerID;
-                maPeerID.uid = [NSString stringWithFormat:@"%@", uid];
-                
-                //if (![array containsObject:maPeerID])
-                    [array addObject:maPeerID];
+                NSDictionary *dic = @{uid:userName};
+                [array addObject:dic];
                 break;
             }
         }
     }
+    *peersArray = array;
     [self.theLock unlock];
 }
 
+- (void)getMessages:(NSString *)uid array:(NSMutableArray **)messageArray isReading:(BOOL)isReading
+{
+    [self.theLock lock];
+    
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (MAMessage *message in self.messages) {
+        
+        if (uid == nil || [uid isEqualToString:@""])
+        {
+            if ((message.jsmessage.messageType == JSBubbleMessageTypeOutgoing && [message.receiverUid isEqualToString:@""]) ||
+                (message.jsmessage.messageType == JSBubbleMessageTypeIncoming && [message.receiverUid isEqualToString:@""]))
+            {
+                if (message.isRead == NO)
+                    message.isRead = isReading;
+                [array addObject:message];
+            }
+        }
+        else
+        {
+            if ((message.jsmessage.messageType == JSBubbleMessageTypeIncoming &&
+                 [message.receiverUid isEqualToString:[self.peerID displayName]] &&
+                 [message.senderUid isEqualToString:uid ]
+                 )
+                ||
+                (message.jsmessage.messageType == JSBubbleMessageTypeOutgoing &&
+                 [message.receiverUid isEqualToString:uid] &&
+                 [message.senderUid isEqualToString:[self.peerID displayName]]))
+            {
+                if (message.isRead == NO)
+                    message.isRead = isReading;
+                [array addObject:message];
+            }
+        }
+    }
+    *messageArray = array;
+    
+    [self.theLock unlock];
+}
+
+- (int)getUnreadMessageCount:(NSString *)uid
+{
+    int count = 0;
+    [self.theLock lock];
+
+    for (MAMessage *message in self.messages) {
+        
+        if (uid == nil || [uid isEqualToString:@""])
+        {
+            if ((message.jsmessage.messageType == JSBubbleMessageTypeOutgoing && [message.receiverUid isEqualToString:@""]) ||
+                (message.jsmessage.messageType == JSBubbleMessageTypeIncoming && [message.receiverUid isEqualToString:@""]))
+            {
+                if (message.isRead == NO)
+                    count++;
+            }
+        }
+        else
+        {
+            if ((message.jsmessage.messageType == JSBubbleMessageTypeIncoming &&
+                 [message.receiverUid isEqualToString:[self.peerID displayName]] &&
+                 [message.senderUid isEqualToString:uid ]
+                 )
+                ||
+                (message.jsmessage.messageType == JSBubbleMessageTypeOutgoing &&
+                 [message.receiverUid isEqualToString:uid] &&
+                 [message.senderUid isEqualToString:[self.peerID displayName]]))
+            {
+                if (message.isRead == NO)
+                    count++;
+            }
+        }
+    }
+    
+    [self.theLock unlock];
+    return count;
+}
+
 - (void)setupPeerWithDisplayName:(NSString *)displayName {
-    self.peerID = [[MAPeerID alloc] init];
-    self.peerID.peerID = [[MCPeerID alloc] initWithDisplayName:displayName];
-    self.peerID.uid = [NSString stringWithFormat:@"%@", [MAGlobalData sharedData].deviceToken];
+    self.peerID = [[MCPeerID alloc] initWithDisplayName:displayName];
 }
 
 - (void)setupSession {
-    self.session = [[MCSession alloc] initWithPeer:self.peerID.peerID];
+    self.session = [[MCSession alloc] initWithPeer:self.peerID];
     self.session.delegate = self;
 }
 
@@ -175,7 +240,7 @@
 
     [self.theLock lock];
     
-    self.browser = [[MCNearbyServiceBrowser alloc] initWithPeer:self.peerID.peerID serviceType:kServiceType];
+    self.browser = [[MCNearbyServiceBrowser alloc] initWithPeer:self.peerID serviceType:kServiceType];
     self.browser.delegate = self;
     
     [self.browser startBrowsingForPeers];
@@ -201,13 +266,13 @@
     
     [self.theLock lock];
     
-    NSDictionary *discoveryInfo = @{kDiscoveryUidKey: [MAGlobalData sharedData].deviceToken};
+    NSDictionary *discoveryInfo = @{kDiscoveryUsernameKey: [MAGlobalData sharedData].userName};
     
-    self.advertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.peerID.peerID discoveryInfo:discoveryInfo serviceType:kServiceType];
+    self.advertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.peerID discoveryInfo:discoveryInfo serviceType:kServiceType];
     self.advertiser.delegate = self;
     [self.advertiser startAdvertisingPeer];
     
-    _isAdvertising = YES;
+    //_isAdvertising = YES;
     
     NSLog(@"start advertising");
     
@@ -221,22 +286,35 @@
     self.advertiser.delegate = nil;
     self.advertiser = nil;
     
-    _isAdvertising = NO;
+    //_isAdvertising = NO;
     
-    _isInvited = NO;
+    //_isInvited = NO;
     
     NSLog(@"stop advertising");
     
     [self.theLock unlock];
 }
 
-- (NSUInteger)numberOfConnectedPeers {
+- (NSUInteger)numberOfConnectedPeers:(NSString *)uid {
     NSUInteger count = 0;
     
     [self.theLock lock];
     
     if (self.session)
-        count = [self.session.connectedPeers count];
+    {
+        if ([uid isEqualToString:@""])
+            count = [self.session.connectedPeers count];
+        else
+        {
+            for (MCPeerID *peerID in self.session.connectedPeers) {
+                if ([[peerID displayName] isEqualToString:uid])
+                {
+                    count = 1;
+                    break;
+                }
+            }
+        }
+    }
     
     [self.theLock unlock];
     
@@ -261,39 +339,42 @@
     
     NSLog(@"didChangeState : %d, displayName : %@", (int)state, [peerID displayName]);
     
-    for (NSDictionary *invitePeer in _invitingPeers) {
-        //NSNumber *invitingTime = [invitePeer objectForKey:@"time"];
-        MCPeerID *invitePeerID = [invitePeer objectForKey:@"peerID"];
-        if ([invitePeerID isEqual:peerID])
-        {
-            [_invitingPeers removeObject:invitePeer];
-        }
-    }
-    
-    if (state == MCSessionStateNotConnected &&
-        _advertisingPeer != nil &&
-        [_advertisingPeer isEqualToString:[peerID displayName]])
-    {
-        [self.session disconnect];
-    }
-    
-    
-    if (self.session.connectedPeers.count <= 0)
-    {
+    if (self.session.connectedPeers.count != 0)
+        _isConnected = YES;
+    else
         _isConnected = NO;
-        _advertisingPeer = nil;
+
+    
+    if (state == MCSessionStateConnected)
+    {
+        [_connectingPeers removeObject:peerID];
+        if (![_connectedPeers containsObject:peerID])
+            [_connectedPeers addObject:peerID];
+        
+        [self sendAvatar:[MAGlobalData sharedData].avatarImage uid:[peerID displayName]];
+    }
+    else if (state == MCSessionStateConnecting)
+    {
+        [_connectedPeers removeObject:peerID];
+        if (![_connectingPeers containsObject:peerID])
+            [_connectingPeers addObject:peerID];
     }
     else
     {
-        _isConnected = YES;
+        [_connectedPeers removeObject:peerID];
+        [_connectingPeers removeObject:peerID];
     }
+    
+    _lastTime = [[NSDate date] timeIntervalSince1970];
 
     [self.theLock unlock];
+
     
-    [self.delegateLock lock];
-    if (self.delegate)
-        [self.delegate peerStateChanged:userInfo];
-    [self.delegateLock unlock];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.delegate)
+            [self.delegate peerStateChanged:userInfo];
+    });
+    
 
 }
 
@@ -301,22 +382,22 @@
     
     NSLog(@"received data from : %@", [peerID displayName]);
     
-    MAMessage *message = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    message.jsmessage.messageType = JSBubbleMessageTypeIncoming;
-    NSMutableArray *messageArray = [self.messages objectForKey:message.senderUid];
-    if (messageArray == nil)
-    {
-        messageArray = [[NSMutableArray alloc] init];
-        [messageArray addObject:message];
-        [self.messages setObject:messageArray forKey:message.senderUid];
-    }
-    else
-        [messageArray addObject:message];
-    
-    [self.delegateLock lock];
-    if (self.delegate)
-        [self.delegate peerDataReceived:message];
-    [self.delegateLock unlock];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MAMessage *message = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (message.isInfo == YES)
+        {
+            UIImage *image = message.jsmessage.image;
+            [self.avatars setObject:image forKey:[peerID displayName]];
+        }
+        else
+        {
+            message.jsmessage.messageType = JSBubbleMessageTypeIncoming;
+            [self.messages addObject:message];
+        }
+        
+        if (self.delegate)
+            [self.delegate peerDataReceived:message];
+    });
 }
 
 - (void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress {
@@ -344,22 +425,25 @@
     
     if (context)
     {
-        NSString *uid = [[NSString alloc] initWithData:context encoding:NSUTF8StringEncoding];
-        if (![uid isEqualToString:@""])
-            [self.peers setObject:peerID forKey:uid];
+        NSString *userName = [[NSString alloc] initWithData:context encoding:NSUTF8StringEncoding];
+        if (userName != nil && ![userName isEqualToString:@""])
+        {
+            NSLog(@"%@-%@", [peerID displayName], userName);
+            [self.peers setObject:userName forKey:[peerID displayName]];
+        }
     }
     
-    if (_advertisingPeer == nil && [[self.peerID.peerID displayName] caseInsensitiveCompare:[peerID displayName]] == NSOrderedAscending)
+    if (![_connectingPeers containsObject:peerID] && ![_connectedPeers containsObject:peerID] && [[self.peerID displayName] caseInsensitiveCompare:[peerID displayName]] == NSOrderedAscending)
     {
-        _lastInviteTime = [[NSDate date] timeIntervalSince1970];
+        //_lastInviteTime = [[NSDate date] timeIntervalSince1970];
         NSLog(@"invite accepted : %@", [peerID displayName]);
-        NSMutableDictionary *invitePeer = [[NSMutableDictionary alloc] init];
-        [invitePeer setObject:[NSNumber numberWithInt:_lastInviteTime] forKey:@"time"];
-        [invitePeer setObject:peerID forKey:@"peerID"];
+        //NSMutableDictionary *invitePeer = [[NSMutableDictionary alloc] init];
+        //[invitePeer setObject:[NSNumber numberWithInt:_lastInviteTime] forKey:@"time"];
+        //[invitePeer setObject:peerID forKey:@"peerID"];
 
-        [_invitingPeers addObject:invitePeer];
+        //[_invitingPeers addObject:invitePeer];
         invitationHandler(YES, self.session);
-        _isInvited = YES;
+        //_isInvited = YES;
     }
     else
     {
@@ -382,43 +466,34 @@
     [self.theLock lock];
     
 
-    NSString *uid = [info objectForKey:kDiscoveryUidKey];
-    if (uid != nil && ![uid isEqualToString:@""])
+    NSString *userName = [info objectForKey:kDiscoveryUsernameKey];
+    if (userName != nil && ![userName isEqualToString:@""])
     {
-        [self.peers setObject:peerID forKey:uid];
+        [self.peers setObject:userName forKey:[peerID displayName]];
+        NSLog(@"%@-%@", [peerID displayName], userName);
     }
 
-    NSLog(@"found peer %@ ---, advertisingPeer %@", [peerID displayName], _advertisingPeer);
+    //NSLog(@"found peer %@ ---, advertisingPeer %@", [peerID displayName], _advertisingPeer);
     
     //if ([[self.session connectedPeers] containsObject:peerID])
     //{
     //    NSLog(@"found peer %@, already connected", [peerID displayName]);
     //}
     //else
+    //{
+      //  if ([_advertisingPeer caseInsensitiveCompare:[peerID displayName]] == NSOrderedDescending)
+        //{
+    if ([self.peerID.displayName caseInsensitiveCompare:[peerID displayName]] == NSOrderedDescending)
     {
-        if (_advertisingPeer == nil)
-        {
-            if ([[self.peerID.peerID displayName] caseInsensitiveCompare:[peerID displayName]] == NSOrderedDescending)
-            {
-                
-                NSLog(@"found peer %@, send invite requesting", [peerID displayName]);
-                NSData *context = [self.peerID.uid dataUsingEncoding:NSUTF8StringEncoding];
-                
-                _lastFoundPeerTime = [[NSDate date] timeIntervalSince1970];
-                [browser invitePeer:peerID toSession:self.session withContext:context timeout:kFoundPeerTimeout];
-                _advertisingPeer = [NSString stringWithFormat:@"%@", [peerID displayName] ];
-            }
-        }
-        else if ([_advertisingPeer caseInsensitiveCompare:[peerID displayName]] == NSOrderedDescending)
-        {
             NSLog(@"found peer %@, send invite requesting", [peerID displayName]);
-            NSData *context = [self.peerID.uid dataUsingEncoding:NSUTF8StringEncoding];
+            NSData *context = [[MAGlobalData sharedData].userName dataUsingEncoding:NSUTF8StringEncoding];
             
-            _lastFoundPeerTime = [[NSDate date] timeIntervalSince1970];
+            //_lastFoundPeerTime = [[NSDate date] timeIntervalSince1970];
             [browser invitePeer:peerID toSession:self.session withContext:context timeout:kFoundPeerTimeout];
-            _advertisingPeer = [NSString stringWithFormat:@"%@", [peerID displayName] ];
-        }
+            //_advertisingPeer = [NSString stringWithFormat:@"%@", [peerID displayName] ];
     }
+        //}
+    //}
 
     
     [self.theLock unlock];
@@ -432,120 +507,102 @@
 - (void)timerProc:(NSTimer *)timer
 {
     [self.theLock lock];
-    
     // count timeout
-    int curTime = [[NSDate date] timeIntervalSince1970];
-    
-    for (NSMutableDictionary *invitePeer in _invitingPeers) {
-        NSNumber *inviteTime = [invitePeer objectForKey:@"time"];
-        int time = [inviteTime intValue];
-        
-        
-        if (curTime - time >= kInviteTimeout)
-        {
-            [_invitingPeers removeObject:invitePeer];
-        }
-    }
-
-
-    
-
-    
-    if (curTime - _lastTime >= _interval)
+    double curTime = [[NSDate date] timeIntervalSince1970];
+    if (_isConnected == NO)
     {
-        _lastTime = curTime;
-        _interval = 1 + (arc4random() % 2);
-        
-        
-        if (_invitingPeers.count == 0)
+        if (curTime - _lastTime >= _interval)
         {
-            //[self stopAdvertiser];
-            //[self startAdvertiser];
-        }
-        
-        if (_isConnected == YES)
-        {
-            //
-        }
-        else
-        {
+            _lastTime = curTime;
+            _interval = 15 + (arc4random() % 5);
             
+            [self restart];
             
-            if (curTime - _lastFoundPeerTime > kFoundPeerTimeout)
-            {
-                _advertisingPeer = nil;
-                [self.session disconnect];
-                [self stopBrowser];
-                [self startBrowser];
-                _lastFoundPeerTime = curTime;
-            }
-            
-            /*
-            if (_isAdvertising == NO)
-            {
-                if (_isFoundPeer == NO || (_isFoundPeer == YES && curTime - _lastFoundPeerTime >= kFoundPeerTimeout))
-                {
-                    [self stopBrowser];
-                    [self.session disconnect];
-                    [self setupSession];
-                    [self startAdvertiser];
-                }
-            }
-            else
-            {
-                if (_isInvited == NO || (_isInvited == YES && curTime - _lastInviteTime >= kInviteTimeout))
-                {
-                    [self stopAdvertiser];
-                    [self.session disconnect];
-                    [self setupSession];
-                    [self startBrowser];
-                }
-            }
-             */
+            _lastTime = [[NSDate date] timeIntervalSince1970];
         }
     }
-
-
     [self.theLock unlock];
 }
 
-- (MAMessage *)sendMessageWithText:(NSString *)text
+- (void)restart
 {
     [self.theLock lock];
     
-    JSMessage *message = [[JSMessage alloc] init];
-    message.text = text;
-    message.sender = [self.peerID.peerID displayName];
-    message.messageType = JSBubbleMessageTypeOutgoing;
-    message.mediaType = JSBubbleMediaTypeText;
-    message.messageStyle = JSBubbleMessageStyleFlat;
-    message.timestamp = [NSDate date];
+    [_connectingPeers removeAllObjects];
+    [_connectedPeers removeAllObjects];
     
-    MAMessage *mamessage = [[MAMessage alloc] init];
-    mamessage.jsmessage = message;
-    mamessage.senderUid = self.peerID.uid;
-    mamessage.receiverUid = @"";
+    [self stopAdvertiser];
+    [self stopBrowser];
+    [self.session disconnect];
     
+    // if open this code block, then app will crash soon.
+    /*
+    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    NSString *_uid = [NSString stringWithFormat:@"%@", (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, uuid))];
+    _uid = [_uid substringToIndex:13];
+    [MAGlobalData sharedData].uid = _uid;
     
-    NSMutableArray *messageArray = [self.messages objectForKey:mamessage.senderUid];
-    if (messageArray == nil)
-    {
-        messageArray = [[NSMutableArray alloc] init];
-        [messageArray addObject:mamessage];
-        [self.messages setObject:messageArray forKey:mamessage.senderUid];
-    }
-    else
-    {
-        [messageArray addObject:message];
-    }
+    [self setupPeerWithDisplayName:_uid];
+     */
+    [self setupSession];
+    [self startAdvertiser];
+    [self startBrowser];
+     [self.theLock unlock];
+}
+
+-(UIImage *)imageResize :(UIImage*)img andResizeTo:(CGSize)newSize
+{
+    CGFloat scale = [[UIScreen mainScreen]scale];
+    
+    //UIGraphicsBeginImageContext(newSize);
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, scale);
+    [img drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+
+- (MAMessage *)sendMessage:(MAMessage *)mamessage uid:(NSString *)targetUid
+{
+    [self.theLock lock];
+    
+    mamessage.isRead = YES;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (mamessage.isInfo == NO)
+            [self.messages addObject:mamessage];
+    });
+    
     
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mamessage];
     NSError *error = nil;
-    if (![self.session sendData:data
-                       toPeers:self.session.connectedPeers
-                      withMode:MCSessionSendDataReliable
-                         error:&error]) {
-        NSLog(@"[Error] %@", error);
+    
+    if ([targetUid isEqualToString:@""])
+    {
+        // send to all
+        if (![self.session sendData:data
+                            toPeers:self.session.connectedPeers
+                           withMode:MCSessionSendDataReliable
+                              error:&error]) {
+            NSLog(@"[Error] %@", error);
+        }
+    }
+    else
+    {
+        // send to a specified target
+        for (MCPeerID *peerID in self.session.connectedPeers) {
+            if ([[peerID displayName] isEqualToString:targetUid])
+            {
+                if (![self.session sendData:data
+                                    toPeers:[[NSArray alloc] initWithObjects:peerID, nil]
+                                   withMode:MCSessionSendDataReliable
+                                      error:&error]) {
+                    NSLog(@"[Error] %@", error);
+                }
+                break;
+            }
+        }
     }
     
     [self.theLock unlock];
@@ -553,13 +610,13 @@
     return mamessage;
 }
 
-- (MAMessage *)sendMessageWithText:(NSString *)text peerID:(MAPeerID *)targetPeerID
+- (MAMessage *)sendMessageWithText:(NSString *)text uid:(NSString *)targetUid
 {
     [self.theLock lock];
     
     JSMessage *message = [[JSMessage alloc] init];
     message.text = text;
-    message.sender = [self.peerID.peerID displayName];
+    message.sender = [MAGlobalData sharedData].userName;
     message.messageType = JSBubbleMessageTypeOutgoing;
     message.mediaType = JSBubbleMediaTypeText;
     message.messageStyle = JSBubbleMessageStyleFlat;
@@ -567,31 +624,10 @@
     
     MAMessage *mamessage = [[MAMessage alloc] init];
     mamessage.jsmessage = message;
-    mamessage.senderUid = self.peerID.uid;
-    mamessage.receiverUid = targetPeerID.uid;
+    mamessage.senderUid = [self.peerID displayName];
+    mamessage.receiverUid = targetUid;
     
-    
-    NSMutableArray *messageArray = [self.messages objectForKey:mamessage.senderUid];
-    if (messageArray == nil)
-    {
-        messageArray = [[NSMutableArray alloc] init];
-        [messageArray addObject:mamessage];
-        
-        [self.messages setObject:messageArray forKey:mamessage.senderUid];
-    }
-    else
-    {
-        [messageArray addObject:message];
-    }
-    
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mamessage];
-    NSError *error = nil;
-    if (![self.session sendData:data
-                        toPeers:[[NSArray alloc] initWithObjects:targetPeerID.peerID, nil]
-                       withMode:MCSessionSendDataReliable
-                          error:&error]) {
-        NSLog(@"[Error] %@", error);
-    }
+    [self sendMessage:mamessage uid:targetUid];
     
     [self.theLock unlock];
     
@@ -599,13 +635,13 @@
 }
 
 //////////////////////////////////////////////////////////////////////
-- (MAMessage *)sendMessageWithImage:(UIImage *)image
+- (MAMessage *)sendMessageWithImage:(UIImage *)image uid:(NSString *)targetUid
 {
     [self.theLock lock];
     
     JSMessage *message = [[JSMessage alloc] init];
     message.image = image;
-    message.sender = [self.peerID.peerID displayName];
+    message.sender = [MAGlobalData sharedData].userName;
     message.messageType = JSBubbleMessageTypeOutgoing;
     message.mediaType = JSBubbleMediaTypeImage;
     message.messageStyle = JSBubbleMessageStyleFlat;
@@ -613,30 +649,10 @@
     
     MAMessage *mamessage = [[MAMessage alloc] init];
     mamessage.jsmessage = message;
-    mamessage.senderUid = self.peerID.uid;
-    mamessage.receiverUid = @"";
+    mamessage.senderUid = [self.peerID displayName];
+    mamessage.receiverUid = targetUid;
     
-    
-    NSMutableArray *messageArray = [self.messages objectForKey:mamessage.senderUid];
-    if (messageArray == nil)
-    {
-        messageArray = [[NSMutableArray alloc] init];
-        [messageArray addObject:mamessage];
-        [self.messages setObject:messageArray forKey:mamessage.senderUid];
-    }
-    else
-    {
-        [messageArray addObject:message];
-    }
-    
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mamessage];
-    NSError *error = nil;
-    if (![self.session sendData:data
-                        toPeers:self.session.connectedPeers
-                       withMode:MCSessionSendDataReliable
-                          error:&error]) {
-        NSLog(@"[Error] %@", error);
-    }
+    [self sendMessage:mamessage uid:targetUid];
     
     [self.theLock unlock];
     
@@ -646,14 +662,14 @@
 
 
 //////////////////////////////////////////////////////////////////////
-- (MAMessage *)sendMessageWithSpeech:(NSData *)speech
+- (MAMessage *)sendMessageWithSpeech:(NSData *)speech uid:(NSString *)targetUid
 {
     [self.theLock lock];
     
     JSMessage *message = [[JSMessage alloc] init];
     message.text = @"  (((....";
     message.speech = speech;
-    message.sender = [self.peerID.peerID displayName];
+    message.sender = [MAGlobalData sharedData].userName;
     message.messageType = JSBubbleMessageTypeOutgoing;
     message.mediaType = JSBubbleMediaTypeSpeech;
     message.messageStyle = JSBubbleMessageStyleFlat;
@@ -661,30 +677,10 @@
     
     MAMessage *mamessage = [[MAMessage alloc] init];
     mamessage.jsmessage = message;
-    mamessage.senderUid = self.peerID.uid;
-    mamessage.receiverUid = @"";
+    mamessage.senderUid = [self.peerID displayName];
+    mamessage.receiverUid = targetUid;
     
-    
-    NSMutableArray *messageArray = [self.messages objectForKey:mamessage.senderUid];
-    if (messageArray == nil)
-    {
-        messageArray = [[NSMutableArray alloc] init];
-        [messageArray addObject:mamessage];
-        [self.messages setObject:messageArray forKey:mamessage.senderUid];
-    }
-    else
-    {
-        [messageArray addObject:message];
-    }
-    
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mamessage];
-    NSError *error = nil;
-    if (![self.session sendData:data
-                        toPeers:self.session.connectedPeers
-                       withMode:MCSessionSendDataReliable
-                          error:&error]) {
-        NSLog(@"[Error] %@", error);
-    }
+    [self sendMessage:mamessage uid:targetUid];
     
     [self.theLock unlock];
     
@@ -692,5 +688,38 @@
     return mamessage;
 }
 
+//////////////////////////////////////////////////////////////////////
+- (MAMessage *)sendAvatar:(UIImage *)avatar uid:(NSString *)targetUid
+{
+    [self.theLock lock];
+    
+    JSMessage *message = [[JSMessage alloc] init];
+    message.sender = [MAGlobalData sharedData].userName;
+    message.messageType = JSBubbleMessageTypeOutgoing;
+    message.mediaType = JSBubbleMediaTypeImage;
+    message.messageStyle = JSBubbleMessageStyleFlat;
+    UIImage *smallImg = [self imageResize:avatar andResizeTo:CGSizeMake(50, 50)];
+    message.image = smallImg;
+    message.timestamp = [NSDate date];
+    
+    MAMessage *mamessage = [[MAMessage alloc] init];
+    mamessage.jsmessage = message;
+    mamessage.senderUid = [self.peerID displayName];
+    mamessage.receiverUid = targetUid;
+    
+    mamessage.isInfo = YES;
+    
+    [self sendMessage:mamessage uid:targetUid];
+    
+    [self.theLock unlock];
+    
+    
+    return mamessage;
+}
+
+- (UIImage *)getAvatar:(NSString *)uid
+{
+    return [self.avatars objectForKey:uid];
+}
 
 @end

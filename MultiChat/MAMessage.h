@@ -21,12 +21,15 @@
 
 #define kMessageSenderUidKey           @"senderUid"
 #define kMessageReceiverUidKey           @"receiverUid"
+#define kMessageInfoKey           @"info"
 
 @interface MAMessage : NSObject <NSCoding>
 
 @property (nonatomic, strong) JSMessage *jsmessage;
 @property (nonatomic, strong) NSString *senderUid;
 @property (nonatomic, strong) NSString *receiverUid;
+@property (nonatomic) BOOL isRead;
+@property (nonatomic) BOOL isInfo;
 
 - (id)initWithCoder:(NSCoder *)aDecoder;
 - (void)encodeWithCoder:(NSCoder *)aCoder;

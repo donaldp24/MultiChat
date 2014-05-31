@@ -56,4 +56,41 @@ static MAUIManager *_sharedUIManager = nil;
 {
     return @"Friends";
 }
+
+- (NSString *)settingsTitle
+{
+    return @"Settings";
+}
+
+
+///////////////////////////////////////////////////
+
+- (UIImage *)getDefaultAvatar
+{
+    
+    UIImage *imgFile = nil;
+    
+    imgFile = [UIImage imageNamed:@"default_avatar"];
+    
+    imgFile = [UIImage imageWithCGImage:[imgFile CGImage] scale:[UIScreen mainScreen].scale orientation:[imgFile imageOrientation]];
+    
+    return imgFile;
+}
+
+- (UIImage *)getPeopleAvatar
+{
+    UIImage *imgFile = nil;
+    
+    imgFile = [UIImage imageNamed:@"people_avatar"];
+    
+    imgFile = [UIImage imageWithCGImage:[imgFile CGImage] scale:[UIScreen mainScreen].scale orientation:[imgFile imageOrientation]];
+    
+    return imgFile;
+}
+
+- (NSString *)getDefaultAvatarImageName
+{
+    return @"default_avatar";
+}
+
 @end

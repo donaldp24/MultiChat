@@ -199,7 +199,8 @@ CGFloat const kJSAvatarSize = 50.0f;
 	UIImage *image = (self.selectedToShowCopyMenu) ? [self bubbleImageHighlighted] : [self bubbleImage];
     
     CGRect bubbleFrame = [self bubbleFrame];
-	[image drawInRect:bubbleFrame];
+    if (self.mediaType != JSBubbleMediaTypeImage)
+        [image drawInRect:bubbleFrame];
     
     
     
@@ -547,10 +548,11 @@ CGFloat const kJSAvatarSize = 50.0f;
 }
 
 + (CGSize)imageSizeForImage:(UIImage *)image{
-    CGFloat width = [UIScreen mainScreen].applicationFrame.size.width * 0.75f;
-    CGFloat height = 130.f;
+    CGFloat width = 100;//[UIScreen mainScreen].applicationFrame.size.width * 0.75f;
+    CGFloat height = 100;//130.f;
     
-    return CGSizeMake(width - kJSAvatarSize, height + kJSAvatarSize);
+    //return CGSizeMake(width - kJSAvatarSize, height + kJSAvatarSize);
+    return CGSizeMake(width, height);
 
 }
 
