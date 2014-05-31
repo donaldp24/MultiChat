@@ -238,11 +238,16 @@
 {
     UIImageView         * _talkingImageView;
     LCPorgressImageView * _dynamicProgress;
+    
+    // kim
+    UIButton            * _stopButton;
 }
 
 @end
 
 @implementation LCVoiceHud
+
+@synthesize delegate;
 
 - (id)init
 {
@@ -268,6 +273,10 @@
     CGRect frame3 = CGRectMake(164/2-50/2, 164/2-93.5/2, 179, 179);
     CGRect frame4 = CGRectMake(0, 0, 35, 58.5);
 
+    // kim
+    int markOffset = 80;
+    CGRect frameStopBtn = CGRectMake(0, 0, 120, 40);
+    
     
     UIImageView * backBlackImageView = [[UIImageView alloc] initWithFrame:frame1];
     backBlackImageView.image = _IMAGE_UNDER;
@@ -276,7 +285,8 @@
     
     UIImageView * micNormalImageView = [[UIImageView alloc] initWithImage:_IMAGE_MIC_NORMAL];
     micNormalImageView.frame = frame2;
-    micNormalImageView.center = self.center;
+//    micNormalImageView.center = self.center;
+    micNormalImageView.center = CGPointMake(self.center.x, self.center.y - markOffset);
     [self addSubview:micNormalImageView];
     [micNormalImageView release];
     
@@ -284,7 +294,8 @@
     _talkingImageView = [[UIImageView alloc] initWithFrame:frame3];
     _talkingImageView.image = _IMAGE_MIC_TALKING;
     [self addSubview:_talkingImageView];
-    _talkingImageView.center = self.center;
+//    micNormalImageView.center = self.center;
+    _talkingImageView.center = CGPointMake(self.center.x, self.center.y - markOffset);
     [_talkingImageView release];
     
     _dynamicProgress = [[LCPorgressImageView alloc] initWithFrame:frame4];
@@ -296,8 +307,31 @@
     _dynamicProgress.progress = 0;
     _dynamicProgress.hasGrayscaleBackground = NO;
     _dynamicProgress.verticalProgress = YES;
-    _dynamicProgress.center = CGPointMake(self.center.x, self.center.y-13);
+//    _dynamicProgress.center = CGPointMake(self.center.x, self.center.y-13);
+    _dynamicProgress.center = CGPointMake(self.center.x, self.center.y - 13 - markOffset);
+    
+    
+    // kim
+    _stopButton = [[UIButton alloc] initWithFrame:frameStopBtn];
+    [_stopButton setTitle:@"Stop" forState:UIControlStateNormal];
+    [_stopButton setBackgroundColor:[UIColor redColor]];
+//    [_stopButton setBackgroundImage:_IMAGE_MIC_TALKING forState:UIControlStateNormal];
+    _stopButton.center = CGPointMake(self.center.x, self.center.y - markOffset + 110);
+    
+    [_stopButton addTarget:self action:@selector(tapStop:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    [self addSubview:_stopButton];
+    [_stopButton release];
 }
+
+#pragma mark - Stop Button
+
+- (void)tapStop:(id)sender
+{
+    [self.delegate tapStopButton];
+}
+
 
 #pragma mark - Custom Accessor
 

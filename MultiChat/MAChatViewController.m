@@ -12,8 +12,9 @@
 #import "LCVoice.h"
 #import "MAGlobalData.h"
 #import "MAUIManager.h"
+#import "LCVoiceHud.h"
 
-@interface MAChatViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface MAChatViewController () <JSMessagesViewDelegate, JSMessagesViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, LCVoiceHudDelegate>
 
 @property (strong, nonatomic) MAAppDelegate *appDelegate;
 @property (strong, nonatomic) IBOutlet UILabel *lblStatus;
@@ -50,7 +51,8 @@
     // initilaize voice recorder
     // Init LCVoice
     self.voice = [[LCVoice alloc] init];
-
+    [self.voice setDelegate:self];
+    
     
     // set mpc handler
     self.appDelegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -481,6 +483,12 @@
 }
 
 //////////////////////////////////////////////////////////////
+#pragma mark - Stop Button Tap
+- (void) tapStopButton
+{
+    [self recordEnd:nil];
+}
+
 #pragma mark - Voice Record
 - (void) recordStart:(id)sender
 {

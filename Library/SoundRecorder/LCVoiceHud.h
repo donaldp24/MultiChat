@@ -9,7 +9,17 @@
 
 #import <UIKit/UIKit.h>
 
+
+@protocol LCVoiceHudDelegate <NSObject>
+
+- (void)tapStopButton;
+
+@end
+
+
 @interface LCVoiceHud : UIView
+
+@property (nonatomic, strong) id<LCVoiceHudDelegate> delegate;
 
 @property(nonatomic) float progress;
 
@@ -17,3 +27,4 @@
 -(void) hide;
 
 @end
+

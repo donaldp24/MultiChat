@@ -184,6 +184,7 @@
     if (yesOrNo) {
         
         voiceHud_ = [[LCVoiceHud alloc] init];
+        voiceHud_.delegate = self.delegate;
         [voiceHud_ show];
         [voiceHud_ release];
         
@@ -215,6 +216,7 @@
     [self resetTimer];
     [self cancelRecording];
 }
+
 
 #pragma mark - LCVoiceHud Delegate
 

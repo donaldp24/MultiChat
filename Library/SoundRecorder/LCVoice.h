@@ -8,6 +8,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LCVoiceHud.h"
+
 
 @interface LCVoice : NSObject
 
@@ -17,5 +19,7 @@
 -(void) startRecordWithPath:(NSString *)path;
 -(void) stopRecordWithCompletionBlock:(void (^)())completion;
 -(void) cancelled;
+
+@property (nonatomic, strong) id<LCVoiceHudDelegate> delegate;
 
 @end

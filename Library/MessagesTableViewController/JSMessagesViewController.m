@@ -112,10 +112,10 @@
 		
         // Set record start action for UIControlEventTouchDown
         [voiceButton addTarget:self action:@selector(voiceActionStart:) forControlEvents:UIControlEventTouchDown];
-        // Set record end action for UIControlEventTouchUpInside
-        [voiceButton addTarget:self action:@selector(voiceActionEnd:) forControlEvents:UIControlEventTouchUpInside];
-        // Set record cancel action for UIControlEventTouchUpOutside
-        [voiceButton addTarget:self action:@selector(voiceActionCancel:) forControlEvents:UIControlEventTouchUpOutside];
+//        // Set record end action for UIControlEventTouchUpInside
+//        [voiceButton addTarget:self action:@selector(voiceActionEnd:) forControlEvents:UIControlEventTouchUpInside];
+//        // Set record cancel action for UIControlEventTouchUpOutside
+//        [voiceButton addTarget:self action:@selector(voiceActionCancel:) forControlEvents:UIControlEventTouchUpOutside];
     }
     
 	
