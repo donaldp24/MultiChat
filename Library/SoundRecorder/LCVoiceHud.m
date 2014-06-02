@@ -274,8 +274,8 @@
     CGRect frame4 = CGRectMake(0, 0, 35, 58.5);
 
     // kim
-    int markOffset = 80;
-    CGRect frameStopBtn = CGRectMake(0, 0, 120, 40);
+    int markOffset = 100;
+    CGRect frameStopBtn = CGRectMake(0, 0, 80, 80);
     
     
     UIImageView * backBlackImageView = [[UIImageView alloc] initWithFrame:frame1];
@@ -312,11 +312,12 @@
     
     
     // kim
-    _stopButton = [[UIButton alloc] initWithFrame:frameStopBtn];
-    [_stopButton setTitle:@"Stop" forState:UIControlStateNormal];
-    [_stopButton setBackgroundColor:[UIColor redColor]];
-//    [_stopButton setBackgroundImage:_IMAGE_MIC_TALKING forState:UIControlStateNormal];
-    _stopButton.center = CGPointMake(self.center.x, self.center.y - markOffset + 110);
+    _stopButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_stopButton setFrame:frameStopBtn];
+    [_stopButton setTitle:@"" forState:UIControlStateNormal];
+    //[_stopButton setBackgroundColor:[UIColor redColor]];
+    [_stopButton setBackgroundImage:[UIImage imageNamed:@"stopbutton"] forState:UIControlStateNormal];
+    _stopButton.center = CGPointMake(self.center.x, self.center.y - markOffset + 150);
     
     [_stopButton addTarget:self action:@selector(tapStop:) forControlEvents:UIControlEventTouchUpInside];
     

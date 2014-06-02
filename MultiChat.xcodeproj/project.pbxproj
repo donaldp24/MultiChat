@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		383C771D193ACE3E00F3E11F /* speaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C771B193ACE3E00F3E11F /* speaker.png */; };
 		D30E618619329B1C00FAE00C /* MAMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D30E618519329B1C00FAE00C /* MAMessage.m */; };
 		D332B181192CF76C00C5ABFF /* MAGlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = D332B180192CF76C00C5ABFF /* MAGlobalData.m */; };
 		D34503B8192C6EEC0003C326 /* MAMPCHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = D34503B7192C6EEC0003C326 /* MAMPCHandler.m */; };
@@ -125,6 +126,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		383C771B193ACE3E00F3E11F /* speaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = speaker.png; sourceTree = "<group>"; };
 		D30E618419329B1C00FAE00C /* MAMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAMessage.h; sourceTree = "<group>"; };
 		D30E618519329B1C00FAE00C /* MAMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAMessage.m; sourceTree = "<group>"; };
 		D332B17F192CF76C00C5ABFF /* MAGlobalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAGlobalData.h; sourceTree = "<group>"; };
@@ -516,6 +518,7 @@
 		D3FE1479192E095C00563C4E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				383C771B193ACE3E00F3E11F /* speaker.png */,
 				D3A8CB1B1936BEF7000CBC32 /* VoiceIcon.png */,
 				D3A8CB1C1936BEF7000CBC32 /* VoiceIcon@2x.png */,
 				D3FE147A192E095C00563C4E /* bubble-default-incoming-green.png */,
@@ -623,6 +626,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = donald;
 				TargetAttributes = {
+					D3FC9E4C192C14520063A94D = {
+						DevelopmentTeam = GMQ956JNPM;
+					};
 					D3FC9E70192C14530063A94D = {
 						TestTargetID = D3FC9E4C192C14520063A94D;
 					};
@@ -701,6 +707,7 @@
 				D3FC9E64192C14520063A94D /* Main_iPhone.storyboard in Resources */,
 				D3A8CB2B1936BF26000CBC32 /* mic_normal_358x358@2x.png in Resources */,
 				D3FE14D5192E095C00563C4E /* bubble-square-outgoing-selected@2x.png in Resources */,
+				383C771D193ACE3E00F3E11F /* speaker.png in Resources */,
 				D3FE14E4192E095C00563C4E /* send.png in Resources */,
 				D3C66DDD19389D3300598D77 /* SVProgressHUD.bundle in Resources */,
 				D3FE14DC192E095C00563C4E /* input-bar.png in Resources */,
@@ -898,14 +905,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: FIFTYFOUR CREATIVE INC. (GMQ956JNPM)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MultiChat/MultiChat-Prefix.pch";
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "DF19D001-6258-49B1-99C2-FB5013EDAC3E";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -916,14 +922,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: FIFTYFOUR CREATIVE INC. (GMQ956JNPM)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MultiChat/MultiChat-Prefix.pch";
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "DF19D001-6258-49B1-99C2-FB5013EDAC3E";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

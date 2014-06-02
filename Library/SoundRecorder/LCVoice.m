@@ -136,14 +136,17 @@
 }
 
 -(void) stopRecordWithCompletionBlock:(void (^)())completion
-{    
+{
+    
     dispatch_async(dispatch_get_main_queue(),completion);
 
     [self resetTimer];
-    [self showVoiceHudOrHide:NO];
+    
     
     [_recorder stop];
     _recorder = nil;
+    
+    [self showVoiceHudOrHide:NO];
     
 }
 
@@ -186,7 +189,6 @@
         voiceHud_ = [[LCVoiceHud alloc] init];
         voiceHud_.delegate = self.delegate;
         [voiceHud_ show];
-        [voiceHud_ release];
         
     }else{
         

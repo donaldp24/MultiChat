@@ -363,7 +363,30 @@ CGFloat const kJSAvatarSize = 50.0f;
 	}
     else if(self.mediaType == JSBubbleMediaTypeSpeech)	// audio
 	{
-        CGSize textSize = [JSBubbleView textSizeForText:self.text];
+        UIImage *recivedImg = [UIImage imageNamed:@"speaker"];
+        
+		if (recivedImg)
+		{
+            CGSize imageSize = CGSizeMake(40, 40);
+            
+            CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
+            
+            CGRect imageFrame = CGRectMake(imgX - 3.f,
+                                           kPaddingTop + 3.0f,
+                                           imageSize.width - kPaddingTop - kMarginTop,
+                                           imageSize.height - kPaddingBottom + 2.f);
+            
+            
+            if (self.style == JSBubbleMessageStyleFlat && self.type == JSBubbleMessageTypeOutgoing)
+            {
+                UIColor* textColor = [UIColor whiteColor];
+                if (self.selectedToShowCopyMenu)
+                    textColor = [UIColor lightTextColor];
+            }
+            [recivedImg drawInRect:imageFrame];
+            
+		}
+        /*CGSize textSize = [JSBubbleView textSizeForText:self.text];
         
         CGFloat textX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
         
@@ -443,7 +466,7 @@ CGFloat const kJSAvatarSize = 50.0f;
 						lineBreakMode:NSLineBreakByWordWrapping
 							alignment:NSTextAlignmentLeft];
 			}
-		}
+		}*/
 	}
 }
 

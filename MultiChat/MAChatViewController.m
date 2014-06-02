@@ -24,7 +24,7 @@
 @property (nonatomic,strong) UIImage *willSendImage;
 @property (strong, nonatomic) NSMutableArray *timestamps;
 
-@property(nonatomic,retain) LCVoice * voice;
+@property(nonatomic,strong) LCVoice * voice;
 
 
 @end
@@ -500,12 +500,10 @@
 
 - (void) recordEnd:(id)sender
 {
+
     [self.voice stopRecordWithCompletionBlock:^{
         
         if (self.voice.recordTime > 0.0f) {
-            /*
-             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"\nrecord finish ! \npath:%@ \nduration:%f",self.voice.recordPath,self.voice.recordTime] delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-             [alert show];*/
             
             [JSMessageSoundEffect playMessageSentSound];
             
@@ -518,7 +516,7 @@
                 MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithSpeech:voicedata uid:self.receiverPeerUid];
                 [self.messageArray addObject:message];
                 
-                [self finishSend];
+                //[self finishSend];
             }
             else
             {
@@ -528,6 +526,7 @@
             
             [self.tableView reloadData];
             [self scrollToBottomAnimated:YES];
+            
         }
         
     }];

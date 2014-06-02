@@ -387,6 +387,8 @@
         //If the track is not player, play the track and change the play button to "Pause"
         else
         {
+            [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+            
             NSError *playerError;
             player = [[AVAudioPlayer alloc] initWithData:fileData error:&playerError];
             
