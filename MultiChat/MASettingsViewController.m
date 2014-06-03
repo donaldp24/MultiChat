@@ -27,6 +27,9 @@ static CGFloat textFieldsLowerPos = 237.0;
 
 @property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
 
+@property (strong, nonatomic) IBOutlet UIImageView *imgBg1;
+@property (strong, nonatomic) IBOutlet UIImageView *imgBg2;
+
 @end
 
 @implementation MASettingsViewController
@@ -51,14 +54,20 @@ static CGFloat textFieldsLowerPos = 237.0;
     self.imgAvatar.image = [MAGlobalData sharedData].avatarImage;
     
     
-    self.usernameTextField.layer.cornerRadius = 3.0;
-    self.usernameTextField.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-    self.usernameTextField.layer.borderWidth = 1.0;
+    //self.usernameTextField.layer.cornerRadius = 3.0;
+    //self.usernameTextField.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    //self.usernameTextField.layer.borderWidth = 1.0;
     self.usernameTextField.text = [[MAGlobalData sharedData] userName];
     
-    UIView *spacerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
-    [self.usernameTextField setLeftViewMode:UITextFieldViewModeAlways];
-    [self.usernameTextField setLeftView:spacerView];
+    //UIView *spacerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    //[self.usernameTextField setLeftViewMode:UITextFieldViewModeAlways];
+    //[self.usernameTextField setLeftView:spacerView];
+    
+    self.imgBg1.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    self.imgBg1.layer.borderWidth = 0.5;
+    
+    self.imgBg2.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    self.imgBg2.layer.borderWidth = 0.5;
 
 
 }
@@ -226,6 +235,22 @@ static CGFloat textFieldsLowerPos = 237.0;
     UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+}
+
+- (IBAction)onTellFriend:(id)sender
+{
+    NSString *string = @"Install MultiChat so we can chat!\nhttp://multichat.com";
+    
+    UIActivityViewController *activityViewController =
+    [[UIActivityViewController alloc] initWithActivityItems:@[string]
+                                      applicationActivities:nil];
+    //activityViewController.excludedActivityTypes = @[UIActivityTypePrint, ];
+    
+    [self.navigationController presentViewController:activityViewController
+                                       animated:YES
+                                     completion:^{
+                                         // ...
+                                     }];
 }
 
 
