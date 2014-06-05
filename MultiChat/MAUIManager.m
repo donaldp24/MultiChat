@@ -43,12 +43,19 @@ static MAUIManager *_sharedUIManager = nil;
 
 - (NSDictionary *)navbarTitleTextAttributes
 {
-    return @{NSForegroundColorAttributeName:[UIColor whiteColor]};
+    //return @{NSForegroundColorAttributeName:[UIColor whiteColor]};
+    return @{NSForegroundColorAttributeName:[UIColor colorWithRed:199/25.0 green:37/255.0 blue:39/255.0 alpha:1.0]};
 }
 
 - (UIColor *)navbarBarTintColor
 {
-    return [UIColor colorWithRed:197/255.0 green:0/255.0 blue:27/255.0 alpha:1.0];
+    //return [UIColor colorWithRed:197/255.0 green:0/255.0 blue:27/255.0 alpha:1.0];
+    return [UIColor whiteColor];
+}
+
+- (UIColor *)navbarBorderColor
+{
+    return [UIColor colorWithRed:229/255.0 green:230/255.0 blue:230/255.0 alpha:1.0];
 }
 
 

@@ -84,6 +84,18 @@
     self.messageArray = [[NSMutableArray alloc] initWithArray:array];
     
     [self refreshStatus];
+    
+    
+    // title
+    self.navigationItem.hidesBackButton = YES;
+    
+    // back button
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self action:@selector(backPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
+    [button setBackgroundImage:[UIImage imageNamed:@"backicon"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(0 ,0,35,35);
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = backButton;
 }
 
 - (void)didReceiveMemoryWarning
@@ -124,15 +136,27 @@
         }
         self.navigationItem.title = [NSString stringWithFormat:@"%@", name];
     }
+
     
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-    
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
+    MAUIManager *uimanager = [MAUIManager sharedUIManager];
     
     self.navigationController.navigationBarHidden = NO;
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithRed:197/255.0 green:0/255.0 blue:27/255.0 alpha:1.0]];
+    
+    
+    self.navigationController.navigationBar.barStyle = [uimanager navbarStyle];
+    
+    self.navigationController.navigationBar.tintColor = [uimanager navbarTintColor];
+    self.navigationController.navigationBar.titleTextAttributes = [uimanager navbarTitleTextAttributes];
+    
+    self.navigationController.navigationBar.barTintColor = [uimanager navbarBarTintColor];
+    
+    // add bottom border
+    CALayer *border = [CALayer layer];
+    border.borderColor = [uimanager navbarBorderColor].CGColor;
+    border.borderWidth = 1;
+    CALayer *layer = self.navigationController.navigationBar.layer;
+    border.frame = CGRectMake(0, layer.bounds.size.height, layer.bounds.size.width, 1);
+    [layer addSublayer:border];
     
 }
 
@@ -162,6 +186,9 @@
     [super viewWillDisappear:animated];
 }
 
+- (IBAction)backPressed:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 
 #pragma mark - MAMPCHandlerDelegate
@@ -302,7 +329,10 @@
 
 - (UIButton *)sendButton
 {
-    return [UIButton defaultSendButton];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setTitle:@"" forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"sendbutton"] forState:UIControlStateNormal];
+    return button;
 }
 
 - (JSMessagesViewTimestampPolicy)timestampPolicy

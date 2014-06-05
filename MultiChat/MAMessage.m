@@ -61,7 +61,7 @@
             [aCoder encodeObject:self.jsmessage.text forKey:kMessageTextKey];
             break;
         case JSBubbleMediaTypeImage:
-            [aCoder encodeObject:UIImageJPEGRepresentation(self.jsmessage.image, 75/100.0) forKey:kMessageImageKey];
+            [aCoder encodeObject:UIImagePNGRepresentation(self.jsmessage.image) forKey:kMessageImageKey];
             break;
         case JSBubbleMediaTypeSpeech:
             [aCoder encodeObject:self.jsmessage.text forKey:kMessageTextKey];

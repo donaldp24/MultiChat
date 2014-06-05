@@ -130,7 +130,7 @@
     
     UIButton *sendButton = [self sendButton];
     sendButton.enabled = NO;
-    sendButton.frame = CGRectMake(self.inputToolBarView.frame.size.width - 65.0f, 8.0f, 59.0f, 26.0f);
+    sendButton.frame = CGRectMake(self.inputToolBarView.frame.size.width - 75.0f, 7.0f, 70.0f, 31.0f);
     [sendButton addTarget:self
                    action:@selector(sendPressed:)
          forControlEvents:UIControlEventTouchUpInside];
@@ -363,11 +363,13 @@
        [self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeSpeech){
         return [JSBubbleMessageCell neededHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]
                                               timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
-                                                 avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
+                                                 avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]
+                                                   type:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
     }else{
         return [JSBubbleMessageCell neededHeightForImage:[self.dataSource imageForRowAtIndexPath:indexPath]
                                                timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
-                                                  avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]];
+                                                  avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]
+                                                    type:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
     }
 }
 

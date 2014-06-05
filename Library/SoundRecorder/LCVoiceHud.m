@@ -285,7 +285,7 @@
     
     UIImageView * micNormalImageView = [[UIImageView alloc] initWithImage:_IMAGE_MIC_NORMAL];
     micNormalImageView.frame = frame2;
-//    micNormalImageView.center = self.center;
+
     micNormalImageView.center = CGPointMake(self.center.x, self.center.y - markOffset);
     [self addSubview:micNormalImageView];
     [micNormalImageView release];
@@ -294,7 +294,7 @@
     _talkingImageView = [[UIImageView alloc] initWithFrame:frame3];
     _talkingImageView.image = _IMAGE_MIC_TALKING;
     [self addSubview:_talkingImageView];
-//    micNormalImageView.center = self.center;
+
     _talkingImageView.center = CGPointMake(self.center.x, self.center.y - markOffset);
     [_talkingImageView release];
     
@@ -307,16 +307,19 @@
     _dynamicProgress.progress = 0;
     _dynamicProgress.hasGrayscaleBackground = NO;
     _dynamicProgress.verticalProgress = YES;
-//    _dynamicProgress.center = CGPointMake(self.center.x, self.center.y-13);
+
     _dynamicProgress.center = CGPointMake(self.center.x, self.center.y - 13 - markOffset);
     
     
     // kim
     _stopButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_stopButton setFrame:frameStopBtn];
+    
     [_stopButton setTitle:@"" forState:UIControlStateNormal];
-    //[_stopButton setBackgroundColor:[UIColor redColor]];
+
     [_stopButton setBackgroundImage:[UIImage imageNamed:@"stopbutton"] forState:UIControlStateNormal];
+    [_stopButton setBackgroundImage:[UIImage imageNamed:@"stopbuttonactive"] forState:UIControlStateSelected];
+
     _stopButton.center = CGPointMake(self.center.x, self.center.y - markOffset + 150);
     
     [_stopButton addTarget:self action:@selector(tapStop:) forControlEvents:UIControlEventTouchUpInside];
@@ -344,9 +347,11 @@
         
         if (progress <= 0.01){
             [self showHighLight:NO];
+            [_stopButton setSelected:YES];
         }
         else{
             [self showHighLight:YES];
+            [_stopButton setSelected:NO];
         }
 
     }

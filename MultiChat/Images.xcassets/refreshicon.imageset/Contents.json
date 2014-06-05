@@ -1,13 +1,22 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
+      "scale" : "1x",
+      "filename" : "refreshicon.png"
+    },
+    {
+      "idiom" : "iphone",
+      "scale" : "2x",
+      "filename" : "refreshicon@2x.png"
+    },
+    {
+      "idiom" : "ipad",
       "scale" : "1x"
     },
     {
-      "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "refreshicon@2x.png"
+      "idiom" : "ipad",
+      "scale" : "2x"
     }
   ],
   "info" : {

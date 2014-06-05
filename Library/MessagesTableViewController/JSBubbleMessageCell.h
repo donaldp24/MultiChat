@@ -65,14 +65,17 @@ typedef enum {
 
 + (CGFloat)neededHeightForText:(NSString *)bubbleViewText
                      timestamp:(BOOL)hasTimestamp
-                        avatar:(BOOL)hasAvatar;
+                        avatar:(BOOL)hasAvatar
+                          type:(int)type;
 
 + (CGFloat)neededHeightForImage:(UIImage *)bubbleViewImage
                      timestamp:(BOOL)hasTimestamp
-                        avatar:(BOOL)hasAvatar;
+                        avatar:(BOOL)hasAvatar
+                           type:(int)type;
 
 + (CGFloat)neededHeightForSpeech:(NSData *)data
                        timestamp:(BOOL)hasTimestamp
-                          avatar:(BOOL)hasAvatar;
+                          avatar:(BOOL)hasAvatar
+                            type:(int)type;
 
 @end

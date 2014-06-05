@@ -18,6 +18,7 @@
 - (UIColor *)navbarTintColor;
 - (NSDictionary *)navbarTitleTextAttributes;
 - (UIColor *)navbarBarTintColor;
+- (UIColor *)navbarBorderColor;
 
 - (NSString *)peopleTitle;
 - (NSString *)settingsTitle;

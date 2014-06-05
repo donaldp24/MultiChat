@@ -58,7 +58,8 @@
 {
     // increase given size for border and shadow
     CGFloat increase = diameter * 0.15f;
-    CGFloat newSize = diameter + increase;
+    //CGFloat newSize = diameter + increase;
+    CGFloat newSize = diameter;
     
     CGRect newRect = CGRectMake(0.0f,
                                 0.0f,
@@ -70,23 +71,30 @@
                                 increase,
                                 newRect.size.width - (increase * 2.0f),
                                 newRect.size.height - (increase * 2.0f));
+     
+    //CGRect imgRect = newRect;
     
     UIGraphicsBeginImageContextWithOptions(newRect.size, NO, [UIScreen mainScreen].scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context);
     
     // draw shadow
+    /*
     if(!CGSizeEqualToSize(shadowOffset, CGSizeZero))
         CGContextSetShadowWithColor(context,
                                     CGSizeMake(shadowOffset.width, shadowOffset.height),
                                     3.0f,
                                     [UIColor colorWithWhite:0.0f alpha:0.45f].CGColor);
+     */
     
     // draw border
     // as circle or square
     CGPathRef borderPath = (clipToCircle) ? CGPathCreateWithEllipseInRect(imgRect, NULL) : CGPathCreateWithRect(imgRect, NULL);
     
-    CGContextSetStrokeColorWithColor(context, borderColor.CGColor);
+    //CGContextSetStrokeColorWithColor(context, borderColor.CGColor);
+    CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:229/255.0 green:230/255.0 blue:230/255.0 alpha:1.0].CGColor);
+    CGContextSetRGBFillColor(context, 229/255.0, 230/255.0, 230/255.0, 1);
+    
     CGContextSetLineWidth(context, borderWidth);
     CGContextAddPath(context, borderPath);
     CGContextDrawPath(context, kCGPathFillStroke);

@@ -71,8 +71,9 @@ extern CGFloat const kJSAvatarSize;
 + (CGSize)bubbleSizeForText:(NSString *)txt;
 + (CGSize)bubbleSizeForImage:(UIImage *)image;
 + (CGSize)imageSizeForImage:(UIImage *)image;
-+ (CGFloat)cellHeightForText:(NSString *)txt;
-+ (CGFloat)cellHeightForImage:(UIImage *)image;
+
++ (CGFloat)cellHeightForText:(NSString *)txt type:(int)type;
++ (CGFloat)cellHeightForImage:(UIImage *)image type:(int)type;
 
 + (int)maxCharactersPerLine;
 + (int)numberOfLinesForMessage:(NSString *)txt;

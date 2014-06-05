@@ -121,6 +121,11 @@ static id<JSMessageInputViewDelegate> __delegate;
         self.textView.layer.borderColor = [[UIColor colorWithWhite:.8 alpha:1.0] CGColor];
         self.textView.layer.borderWidth = 0.65f;
         self.textView.layer.cornerRadius = 6.0f;
+        
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        gradient.frame = self.textView.bounds;
+        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:1.0] CGColor], (id)[[UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1.0] CGColor], nil];
+        [self.textView.layer insertSublayer:gradient atIndex:0];
     }
     
 //    self.textView.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);

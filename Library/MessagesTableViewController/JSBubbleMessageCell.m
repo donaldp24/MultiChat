@@ -264,23 +264,25 @@
     self.avatarImageView.image = styledImg;
 }
 
-+ (CGFloat)neededHeightForText:(NSString *)bubbleViewText timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar
++ (CGFloat)neededHeightForText:(NSString *)bubbleViewText timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar type:(int)type
 {
     CGFloat timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT : 0.0f;
     CGFloat avatarHeight = (hasAvatar) ? kJSAvatarSize : 0.0f;
-    return MAX(avatarHeight, [JSBubbleView cellHeightForText:bubbleViewText]) + timestampHeight;
+    return MAX(avatarHeight, [JSBubbleView cellHeightForText:bubbleViewText type:type]) + timestampHeight;
 }
 
-+ (CGFloat)neededHeightForImage:(UIImage *)bubbleViewImage timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar{
++ (CGFloat)neededHeightForImage:(UIImage *)bubbleViewImage timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar type:(int)type
+{
     CGFloat timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT : 0.0f;
     CGFloat avatarHeight = (hasAvatar) ? kJSAvatarSize : 0.0f;
-    return MAX(avatarHeight, [JSBubbleView cellHeightForImage:bubbleViewImage]) + timestampHeight;
+    return MAX(avatarHeight, [JSBubbleView cellHeightForImage:bubbleViewImage type:type]) + timestampHeight;
 }
 
-+ (CGFloat)neededHeightForSpeech:(NSData *)data timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar{
++ (CGFloat)neededHeightForSpeech:(NSData *)data timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar type:(int)type
+{
     CGFloat timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT : 0.0f;
     CGFloat avatarHeight = (hasAvatar) ? kJSAvatarSize : 0.0f;
-    return MAX(avatarHeight, [JSBubbleView cellHeightForText:@" "]) + timestampHeight;
+    return MAX(avatarHeight, [JSBubbleView cellHeightForText:@" " type:type]) + timestampHeight;
 }
 
 #pragma mark - Copying

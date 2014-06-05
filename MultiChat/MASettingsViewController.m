@@ -40,15 +40,26 @@ static CGFloat textFieldsLowerPos = 237.0;
 	// Do any additional setup after loading the view, typically from a nib.
     
     // title
-    self.navigationItem.hidesBackButton = NO;
+    self.navigationItem.hidesBackButton = YES;
+    
+    // back button
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self action:@selector(backPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
+    [button setBackgroundImage:[UIImage imageNamed:@"backicon"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(0 ,0,35,35);
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.navigationItem.leftBarButtonItem = backButton;
+    
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTap:)];
     [self.view addGestureRecognizer:tap];
     
+    
+    
     self.appDelegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
 
     
-    self.imgAvatar.layer.cornerRadius = self.avatar.frame.size.height / 2;
+    self.imgAvatar.layer.cornerRadius = self.imgAvatar.frame.size.height / 2;
     self.imgAvatar.layer.masksToBounds = YES;
     self.imgAvatar.layer.borderWidth = 0;
     self.imgAvatar.image = [MAGlobalData sharedData].avatarImage;
@@ -62,12 +73,6 @@ static CGFloat textFieldsLowerPos = 237.0;
     //UIView *spacerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
     //[self.usernameTextField setLeftViewMode:UITextFieldViewModeAlways];
     //[self.usernameTextField setLeftView:spacerView];
-    
-    self.imgBg1.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-    self.imgBg1.layer.borderWidth = 0.5;
-    
-    self.imgBg2.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-    self.imgBg2.layer.borderWidth = 0.5;
 
 
 }
@@ -94,6 +99,14 @@ static CGFloat textFieldsLowerPos = 237.0;
     self.navigationController.navigationBar.titleTextAttributes = [uimanager navbarTitleTextAttributes];
     
     self.navigationController.navigationBar.barTintColor = [uimanager navbarBarTintColor];
+    
+    // add bottom border
+    CALayer *border = [CALayer layer];
+    border.borderColor = [uimanager navbarBorderColor].CGColor;
+    border.borderWidth = 1;
+    CALayer *layer = self.navigationController.navigationBar.layer;
+    border.frame = CGRectMake(0, layer.bounds.size.height, layer.bounds.size.width, 1);
+    [layer addSublayer:border];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -117,6 +130,10 @@ static CGFloat textFieldsLowerPos = 237.0;
     
     [[MAGlobalData sharedData] setUserName:[_usernameTextField text]];
     [self.appDelegate.mpcHandler sendAvatar:[MAGlobalData sharedData].avatarImage uid:@""];
+}
+
+- (IBAction)backPressed:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)onAvatar:(id)sender {

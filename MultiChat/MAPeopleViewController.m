@@ -60,11 +60,21 @@
     
     
     // settings button
-    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settingsicon"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsPressed:)];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self action:@selector(settingsPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
+    [button setBackgroundImage:[UIImage imageNamed:@"settingsicon"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(0 ,0,35,35);
+    UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+   
     self.navigationItem.leftBarButtonItem = settingsButton;
     
     // refresh button
-    _refreshButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"refreshicon"] style:UIBarButtonItemStylePlain target:self action:@selector(refreshPressed:)];
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self action:@selector(refreshPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
+    [button setBackgroundImage:[UIImage imageNamed:@"refreshicon"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(0 ,0,35,35);
+    _refreshButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
     self.navigationItem.rightBarButtonItem = _refreshButton;
     
 }
@@ -103,7 +113,16 @@
     
     self.navigationController.navigationBar.barTintColor = [uimanager navbarBarTintColor];
     
+    CALayer *border = [CALayer layer];
+    border.borderColor = [uimanager navbarBorderColor].CGColor;
+    border.borderWidth = 1;
+    CALayer *layer = self.navigationController.navigationBar.layer;
+    border.frame = CGRectMake(0, layer.bounds.size.height, layer.bounds.size.width, 1);
+    [layer addSublayer:border];
+    
+    
     self.appDelegate.mpcHandler.delegate = self;
+    
     
     if ([self.appDelegate.mpcHandler isStarted])
     {
@@ -198,11 +217,12 @@
     UIImageView *imgAvatar = (UIImageView *)[cell viewWithTag:101];
     UILabel *lblName = (UILabel *)[cell viewWithTag:102];
     UILabel *lblCount = (UILabel *)[cell viewWithTag:103];
+    UIView *viewBg = (UIView *)[cell viewWithTag:99];
     
     imgAvatar.layer.cornerRadius = imgAvatar.frame.size.height / 2;
     imgAvatar.layer.masksToBounds = YES;
-    imgAvatar.layer.borderWidth = 1;
-    imgAvatar.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    imgAvatar.layer.borderWidth = 0;
+    //imgAvatar.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
     //imgAvatar.layer.shadowColor = [UIColor lightGrayColor].CGColor;
     
@@ -251,6 +271,18 @@
                 lblCount.text = @"";
         }
     }
+    
+    // background
+    if (viewBg) {
+        CAGradientLayer *gradient = [CAGradientLayer layer];
+        gradient.frame = viewBg.frame;
+        gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1.0] CGColor], (id)[[UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:1.0] CGColor], nil];
+        [viewBg.layer insertSublayer:gradient above:0];
+        viewBg.tag = 199;
+        
+    }
+    
+    
     return cell;
 }
 

@@ -1,13 +1,22 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "idiom" : "iphone",
+      "scale" : "1x",
+      "filename" : "people_avatar.png"
+    },
+    {
+      "idiom" : "iphone",
+      "scale" : "2x",
+      "filename" : "people_avatar@2x.png"
+    },
+    {
+      "idiom" : "ipad",
       "scale" : "1x"
     },
     {
-      "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "people_avatar.png"
+      "idiom" : "ipad",
+      "scale" : "2x"
     }
   ],
   "info" : {

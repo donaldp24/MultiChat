@@ -40,6 +40,8 @@
 
 CGFloat const kJSAvatarSize = 50.0f;
 
+#define kSenderTextHeight 14.0f
+
 #define kMarginTop 8.0f
 #define kMarginBottom 4.0f
 #define kPaddingTop 12.0f
@@ -144,21 +146,22 @@ CGFloat const kJSAvatarSize = 50.0f;
 #pragma mark - Drawing
 - (CGRect)bubbleFrame
 {
+    CGRect rtFrame;
     if(self.mediaType == JSBubbleMediaTypeText){
         CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
-        return CGRectMake(floorf(self.type == JSBubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f),
+        rtFrame = CGRectMake(floorf(self.type == JSBubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f),
                           floorf(kMarginTop),
                           floorf(bubbleSize.width),
                           floorf(bubbleSize.height));
     }else if (self.mediaType == JSBubbleMediaTypeImage){
         CGSize bubbleSize = [JSBubbleView imageSizeForImage:(UIImage *)self.data];
-        return CGRectMake(floorf(self.type == JSBubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 10.0f),
+        rtFrame = CGRectMake(floorf(self.type == JSBubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 10.0f),
                           floorf(kMarginTop),
                           floorf(bubbleSize.width),
                           floorf(bubbleSize.height));
     }else if (self.mediaType == JSBubbleMediaTypeSpeech){
         CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
-        return CGRectMake(floorf(self.type == JSBubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f),
+        rtFrame = CGRectMake(floorf(self.type == JSBubbleMessageTypeOutgoing ? self.frame.size.width - bubbleSize.width : 0.0f),
                           floorf(kMarginTop),
                           floorf(bubbleSize.width),
                           floorf(bubbleSize.height));
@@ -166,6 +169,10 @@ CGFloat const kJSAvatarSize = 50.0f;
         NSLog(@"act对象消息");
         return CGRectMake(0, 0, 0, 0);
     }
+    
+    if (self.type == JSBubbleMessageTypeIncoming)
+        rtFrame.origin.y += kSenderTextHeight;
+    return rtFrame;
     
 }
 
@@ -207,19 +214,18 @@ CGFloat const kJSAvatarSize = 50.0f;
     // draw sender name
     if (self.style == JSBubbleMessageStyleFlat && self.type == JSBubbleMessageTypeIncoming)
     {
-        
         CGSize senderTextSize = [JSBubbleView senderTextSizeForText:self.sender];
         CGFloat textX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f) - 10.0;
         
         CGRect textFrame = CGRectMake(textX,
-                                      0,
+                                      kMarginTop,
                                       senderTextSize.width,
                                       senderTextSize.height);
         
         
         if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending)
         {
-            UIColor* textColor = [UIColor lightGrayColor];
+            UIColor* textColor = [UIColor colorWithRed:176/255.0 green:176/255.0 blue:176/255.0 alpha:1.0];
             
             
             NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -258,16 +264,16 @@ CGFloat const kJSAvatarSize = 50.0f;
         CGFloat textX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
         
         CGRect textFrame = CGRectMake(textX,
-                                      kPaddingTop + kMarginTop,
+                                      kPaddingTop + kMarginTop + (self.type == JSBubbleMessageTypeIncoming?kSenderTextHeight:0),
                                       textSize.width,
                                       textSize.height);
         
 		// for flat outgoing messages change the text color to grey or white.  Otherwise leave them black.
 		if (self.style == JSBubbleMessageStyleFlat && self.type == JSBubbleMessageTypeOutgoing)
 		{
-			UIColor* textColor = [UIColor whiteColor];
+			UIColor* textColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:1.0];
 			if (self.selectedToShowCopyMenu)
-				textColor = [UIColor lightTextColor];
+				textColor = [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:1.0];
 			
 			if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending)
 			{
@@ -303,9 +309,9 @@ CGFloat const kJSAvatarSize = 50.0f;
 		{
 			if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending)
 			{
-                UIColor* textColor = [UIColor colorWithRed:10/255.0 green:131/255.0 blue:253/255.0 alpha:1.0];
+                UIColor* textColor = [UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0];
                 if (self.selectedToShowCopyMenu)
-                    textColor = [UIColor colorWithRed:30/255.0 green:161/255.0 blue:223/255.0 alpha:1.0];
+                    textColor = [UIColor colorWithRed:119/255.0 green:119/255.0 blue:119/255.0 alpha:1.0];
                 
                 
 				NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -346,7 +352,7 @@ CGFloat const kJSAvatarSize = 50.0f;
             CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
             
             CGRect imageFrame = CGRectMake(imgX - 3.f,
-                                          kPaddingTop,
+                                          kPaddingTop + (self.type == JSBubbleMessageTypeIncoming?kSenderTextHeight:0),
                                           imageSize.width - kPaddingTop - kMarginTop,
                                           imageSize.height - kPaddingBottom + 2.f);
             
@@ -372,7 +378,7 @@ CGFloat const kJSAvatarSize = 50.0f;
             CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
             
             CGRect imageFrame = CGRectMake(imgX - 3.f,
-                                           kPaddingTop + 3.0f,
+                                           kPaddingTop + 3.0f + (self.type == JSBubbleMessageTypeIncoming?kSenderTextHeight:0),
                                            imageSize.width - kPaddingTop - kMarginTop,
                                            imageSize.height - kPaddingBottom + 2.f);
             
@@ -579,13 +585,20 @@ CGFloat const kJSAvatarSize = 50.0f;
 
 }
 
-+ (CGFloat)cellHeightForText:(NSString *)txt
++ (CGFloat)cellHeightForText:(NSString *)txt type:(int)type
 {
-    return [JSBubbleView bubbleSizeForText:txt].height + kMarginTop + kMarginBottom;
+    if (type == JSBubbleMessageTypeIncoming)
+        return [JSBubbleView bubbleSizeForText:txt].height + kMarginTop + kSenderTextHeight + kMarginBottom;
+    else
+        return [JSBubbleView bubbleSizeForText:txt].height + kMarginTop + kMarginBottom;
 }
 
-+ (CGFloat)cellHeightForImage:(UIImage *)image{
-    return [JSBubbleView bubbleSizeForImage:image].height + kMarginTop + kMarginBottom;
++ (CGFloat)cellHeightForImage:(UIImage *)image type:(int)type
+{
+    if (type == JSBubbleMessageTypeIncoming)
+        return [JSBubbleView bubbleSizeForImage:image].height + kMarginTop + kSenderTextHeight + kMarginBottom;
+    else
+        return [JSBubbleView bubbleSizeForImage:image].height + kMarginTop + kMarginBottom;
 }
 
 + (int)maxCharactersPerLine
