@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3715F86219415733006A45C1 /* stopbuttonhover.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F86019415733006A45C1 /* stopbuttonhover.png */; };
+		3715F86319415733006A45C1 /* stopbuttonhover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F86119415733006A45C1 /* stopbuttonhover@2x.png */; };
+		3715F86D194157D0006A45C1 /* PhotoIconhover.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F86A194157D0006A45C1 /* PhotoIconhover.png */; };
+		3715F86E194157D0006A45C1 /* PhotoIconhover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F86B194157D0006A45C1 /* PhotoIconhover@2x.png */; };
+		3715F86F194157D0006A45C1 /* speaker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F86C194157D0006A45C1 /* speaker@2x.png */; };
+		3715F874194159D0006A45C1 /* speakerhover.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F870194159D0006A45C1 /* speakerhover.png */; };
+		3715F875194159D0006A45C1 /* speakerhover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F871194159D0006A45C1 /* speakerhover@2x.png */; };
+		3715F876194159D0006A45C1 /* VoiceIconhover.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F872194159D0006A45C1 /* VoiceIconhover.png */; };
+		3715F877194159D0006A45C1 /* VoiceIconhover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3715F873194159D0006A45C1 /* VoiceIconhover@2x.png */; };
 		383C771D193ACE3E00F3E11F /* speaker.png in Resources */ = {isa = PBXBuildFile; fileRef = 383C771B193ACE3E00F3E11F /* speaker.png */; };
 		D3078FF21940236C009179F7 /* stopbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = D3078FF01940236C009179F7 /* stopbutton.png */; };
 		D3078FF31940236C009179F7 /* stopbutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3078FF11940236C009179F7 /* stopbutton@2x.png */; };
@@ -111,6 +120,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3715F86019415733006A45C1 /* stopbuttonhover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopbuttonhover.png; sourceTree = "<group>"; };
+		3715F86119415733006A45C1 /* stopbuttonhover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stopbuttonhover@2x.png"; sourceTree = "<group>"; };
+		3715F86A194157D0006A45C1 /* PhotoIconhover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PhotoIconhover.png; sourceTree = "<group>"; };
+		3715F86B194157D0006A45C1 /* PhotoIconhover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PhotoIconhover@2x.png"; sourceTree = "<group>"; };
+		3715F86C194157D0006A45C1 /* speaker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "speaker@2x.png"; sourceTree = "<group>"; };
+		3715F870194159D0006A45C1 /* speakerhover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = speakerhover.png; sourceTree = "<group>"; };
+		3715F871194159D0006A45C1 /* speakerhover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "speakerhover@2x.png"; sourceTree = "<group>"; };
+		3715F872194159D0006A45C1 /* VoiceIconhover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VoiceIconhover.png; sourceTree = "<group>"; };
+		3715F873194159D0006A45C1 /* VoiceIconhover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VoiceIconhover@2x.png"; sourceTree = "<group>"; };
 		383C771B193ACE3E00F3E11F /* speaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = speaker.png; sourceTree = "<group>"; };
 		D3078FF01940236C009179F7 /* stopbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopbutton.png; sourceTree = "<group>"; };
 		D3078FF11940236C009179F7 /* stopbutton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stopbutton@2x.png"; sourceTree = "<group>"; };
@@ -289,6 +307,8 @@
 		D3A8CB2E1936BF2D000CBC32 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				3715F86019415733006A45C1 /* stopbuttonhover.png */,
+				3715F86119415733006A45C1 /* stopbuttonhover@2x.png */,
 				D378EC1E1940574700D147EC /* stopbuttonactive.png */,
 				D378EC1F1940574700D147EC /* stopbuttonactive@2x.png */,
 				D3078FF01940236C009179F7 /* stopbutton.png */,
@@ -495,6 +515,13 @@
 		D3FE1479192E095C00563C4E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				3715F870194159D0006A45C1 /* speakerhover.png */,
+				3715F871194159D0006A45C1 /* speakerhover@2x.png */,
+				3715F872194159D0006A45C1 /* VoiceIconhover.png */,
+				3715F873194159D0006A45C1 /* VoiceIconhover@2x.png */,
+				3715F86A194157D0006A45C1 /* PhotoIconhover.png */,
+				3715F86B194157D0006A45C1 /* PhotoIconhover@2x.png */,
+				3715F86C194157D0006A45C1 /* speaker@2x.png */,
 				383C771B193ACE3E00F3E11F /* speaker.png */,
 				D3A8CB1B1936BEF7000CBC32 /* VoiceIcon.png */,
 				D3A8CB1C1936BEF7000CBC32 /* VoiceIcon@2x.png */,
@@ -619,35 +646,43 @@
 				D3FE14C8192E095C00563C4E /* bubble-flat-incoming.png in Resources */,
 				D3A8CB1D1936BEF7000CBC32 /* VoiceIcon.png in Resources */,
 				D3FE14CF192E095C00563C4E /* bubble-flat-outgoing@2x.png in Resources */,
+				3715F86219415733006A45C1 /* stopbuttonhover.png in Resources */,
 				D3A8CB281936BF26000CBC32 /* black_bg_ip5@2x.png in Resources */,
 				D3FC9E67192C14520063A94D /* Main_iPad.storyboard in Resources */,
 				D3078FF31940236C009179F7 /* stopbutton@2x.png in Resources */,
 				D3FE14E6192E095C00563C4E /* messageReceived.aiff in Resources */,
 				D3FE14E2192E095C00563C4E /* send-highlighted.png in Resources */,
 				D3FE14DE192E095C00563C4E /* input-field.png in Resources */,
+				3715F875194159D0006A45C1 /* speakerhover@2x.png in Resources */,
 				D3FE14E0192E095C00563C4E /* PhotoIcon.png in Resources */,
 				D3FE14CC192E095C00563C4E /* bubble-flat-outgoing-selected.png in Resources */,
 				D3FE14DB192E095C00563C4E /* input-bar-flat@2x.png in Resources */,
 				D378EC211940574700D147EC /* stopbuttonactive@2x.png in Resources */,
+				3715F876194159D0006A45C1 /* VoiceIconhover.png in Resources */,
 				D3FE14C6192E095C00563C4E /* bubble-flat-incoming-selected.png in Resources */,
 				D3856E1D192F4F430086E9E5 /* iTunesArtwork in Resources */,
+				3715F86D194157D0006A45C1 /* PhotoIconhover.png in Resources */,
 				D3FE14C7192E095C00563C4E /* bubble-flat-incoming-selected@2x.png in Resources */,
 				D3FE14E5192E095C00563C4E /* send@2x.png in Resources */,
 				D3FE14E3192E095C00563C4E /* send-highlighted@2x.png in Resources */,
+				3715F86F194157D0006A45C1 /* speaker@2x.png in Resources */,
 				D3A8CB1E1936BEF7000CBC32 /* VoiceIcon@2x.png in Resources */,
 				D3FE14C9192E095C00563C4E /* bubble-flat-incoming@2x.png in Resources */,
 				D3FE14CA192E095C00563C4E /* bubble-flat-outgoing-old.png in Resources */,
 				D378EC201940574700D147EC /* stopbuttonactive.png in Resources */,
+				3715F86E194157D0006A45C1 /* PhotoIconhover@2x.png in Resources */,
 				D3856E1E192F4F430086E9E5 /* iTunesArtwork@2x in Resources */,
 				D3078FF21940236C009179F7 /* stopbutton.png in Resources */,
 				D3A8CB2C1936BF26000CBC32 /* mic_talk_358x358@2x.png in Resources */,
 				D3FE14DD192E095C00563C4E /* input-bar@2x.png in Resources */,
 				D3FE14CE192E095C00563C4E /* bubble-flat-outgoing.png in Resources */,
+				3715F874194159D0006A45C1 /* speakerhover.png in Resources */,
 				D3FE14CD192E095C00563C4E /* bubble-flat-outgoing-selected@2x.png in Resources */,
 				D3FE14DF192E095C00563C4E /* input-field@2x.png in Resources */,
 				D3FC9E6C192C14520063A94D /* Images.xcassets in Resources */,
 				D3FE14D9192E095C00563C4E /* bubble-typing@2x.png in Resources */,
 				D3FE14E7192E095C00563C4E /* messageSent.aiff in Resources */,
+				3715F877194159D0006A45C1 /* VoiceIconhover@2x.png in Resources */,
 				D3FC9E64192C14520063A94D /* Main_iPhone.storyboard in Resources */,
 				D3A8CB2B1936BF26000CBC32 /* mic_normal_358x358@2x.png in Resources */,
 				383C771D193ACE3E00F3E11F /* speaker.png in Resources */,
@@ -657,6 +692,7 @@
 				D3FC9E5B192C14520063A94D /* InfoPlist.strings in Resources */,
 				D3FE14E1192E095C00563C4E /* PhotoIcon@2x.png in Resources */,
 				D3FE14D8192E095C00563C4E /* bubble-typing.png in Resources */,
+				3715F86319415733006A45C1 /* stopbuttonhover@2x.png in Resources */,
 				D3FE14DA192E095C00563C4E /* input-bar-flat.png in Resources */,
 				D3A8CB2D1936BF26000CBC32 /* wave70x117@2x.png in Resources */,
 			);
@@ -847,13 +883,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: FIFTYFOUR CREATIVE INC. (GMQ956JNPM)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MultiChat/MultiChat-Prefix.pch";
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "977E5451-34E1-4BD5-8043-E69F31DD4434";
+				PROVISIONING_PROFILE = "DF19D001-6258-49B1-99C2-FB5013EDAC3E";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -864,7 +900,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: FIFTYFOUR CREATIVE INC. (GMQ956JNPM)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MultiChat/MultiChat-Prefix.pch";
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";

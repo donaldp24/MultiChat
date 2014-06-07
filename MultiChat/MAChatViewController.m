@@ -336,6 +336,7 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setTitle:@"" forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"sendbutton"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"sendbutton_hover"] forState:UIControlStateHighlighted];
     return button;
 }
 
