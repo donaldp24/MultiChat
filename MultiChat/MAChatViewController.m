@@ -209,20 +209,23 @@
 - (void)dataReceived:(id)data
 {
     MAMessage *message = (MAMessage*)data;
-    if (message.isInfo == YES)
+    if (message.type != MAMessageTypeMessage)
         return;
     
     [JSMessageSoundEffect playMessageReceivedSound];
     
     
     BOOL isMine = NO;
-    if ([self.receiverPeerUid isEqualToString:@""])
+    
+    // if send for everyone
+    if ([self.receiverPeerUid isEqualToString:kUidForEveryone])
     {
-        if ([message.receiverUid isEqualToString:@""])
+        if ([message.receiverUid isEqualToString:kUidForEveryone])
             isMine = YES;
     }
     else
     {
+        // if send from target, and send for me
         if ([message.senderUid isEqualToString:self.receiverPeerUid] &&
             [message.receiverUid isEqualToString:[MAGlobalData sharedData].uid])
         {
@@ -238,7 +241,6 @@
         
         [self.tableView reloadData];
         [self scrollToBottomAnimated:YES];
-
     }
 }
 
@@ -246,7 +248,10 @@
 
 - (void)refreshStatus
 {
-    NSUInteger nCount = [self.appDelegate.mpcHandler numberOfConnectedPeers:self.receiverPeerUid];
+    NSMutableArray *array = nil;
+    [self.appDelegate.mpcHandler getPeers:&array];
+    
+    NSUInteger nCount = [array count];
     if (nCount == 0)
     {
         self.lblStatus.text = @"You are the only one here";
@@ -266,10 +271,9 @@
 #pragma mark - Messages view delegate
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text
 {
-    
     [JSMessageSoundEffect playMessageSentSound];
     
-    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithText:text uid:self.receiverPeerUid];
+    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithText:text recevierUid:self.receiverPeerUid];
     [self.messageArray addObject:message];
     
     [self finishSend];
@@ -483,7 +487,7 @@
     
     [JSMessageSoundEffect playMessageSentSound];
     
-    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithImage:smallImg uid:self.receiverPeerUid];
+    MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithImage:smallImg receiverUid:self.receiverPeerUid];
     [self.messageArray addObject:message];
     
     [self finishSend];
@@ -543,7 +547,7 @@
             {
                 NSData *voicedata = [[NSFileManager defaultManager] contentsAtPath:self.voice.recordPath];
                 
-                MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithSpeech:voicedata uid:self.receiverPeerUid];
+                MAMessage *message = [self.appDelegate.mpcHandler sendMessageWithSpeech:voicedata receiverUid:self.receiverPeerUid];
                 [self.messageArray addObject:message];
                 
                 //[self finishSend];

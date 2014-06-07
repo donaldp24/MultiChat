@@ -117,7 +117,8 @@
     border.borderColor = [uimanager navbarBorderColor].CGColor;
     border.borderWidth = 1;
     CALayer *layer = self.navigationController.navigationBar.layer;
-    border.frame = CGRectMake(0, layer.bounds.size.height, layer.bounds.size.width, 1);
+    
+    border.frame = CGRectMake(0, layer.frame.size.height, layer.bounds.size.width, 1);
     [layer addSublayer:border];
     
     
@@ -163,6 +164,8 @@
 - (void)refreshPressed:(id)sender
 {
     [self.appDelegate.mpcHandler restart];
+    
+    [self.peopleArray removeAllObjects];
     
     [self.tblPeople reloadData];
     

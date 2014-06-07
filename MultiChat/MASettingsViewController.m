@@ -129,7 +129,7 @@ static CGFloat textFieldsLowerPos = 237.0;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     
     [[MAGlobalData sharedData] setUserName:[_usernameTextField text]];
-    [self.appDelegate.mpcHandler sendAvatar:[MAGlobalData sharedData].avatarImage uid:@""];
+    [self.appDelegate.mpcHandler sendAvatar:[MAGlobalData sharedData].avatarImage receiverUid:kUidForEveryone];
 }
 
 - (IBAction)backPressed:(id)sender {

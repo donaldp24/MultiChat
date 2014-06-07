@@ -14,7 +14,13 @@
 #define kInviteTimeout  30
 #define kFoundPeerTimeout   30
 
-//#define kDiscoveryUidKey    @"uid"
+
+/**
+ * uid for everyone
+ */
+#define kUidForEveryone @""
+
+
 #define kDiscoveryUsernameKey @"username"
 
 @protocol MAMPCHandlerDelegate <NSObject>
@@ -37,14 +43,13 @@
 - (void)getPeers:(NSMutableArray **)peersArray;
 - (void)getMessages:(NSString *)uid array:(NSMutableArray **)messageArray isReading:(BOOL)isReading;
 - (int)getUnreadMessageCount:(NSString *)uid;
-//- (MAMessage *)sendMessageWithText:(NSString *)text;
-- (MAMessage *)sendMessageWithText:(NSString *)text uid:(NSString *)targetUid;
-//- (MAMessage *)sendMessageWithImage:(UIImage *)image;
-- (MAMessage *)sendMessageWithImage:(UIImage *)image uid:(NSString *)targetUid;
-//- (MAMessage *)sendMessageWithSpeech:(NSData *)speech;
-- (MAMessage *)sendMessageWithSpeech:(NSData *)speech uid:(NSString *)targetUid;
 
-- (MAMessage *)sendAvatar:(UIImage *)avatar uid:(NSString *)targetUid;
+- (MAMessage *)sendAvatar:(UIImage *)avatar receiverUid:(NSString *)receiverUid;
+- (MAMessage *)sendMessageWithText:(NSString *)text recevierUid:(NSString *)receiverUid;
+- (MAMessage *)sendMessageWithImage:(UIImage *)image receiverUid:(NSString *)receiverUid;
+- (MAMessage *)sendMessageWithSpeech:(NSData *)speech receiverUid:(NSString *)receiverUid;
+
+
 
 - (UIImage *)getAvatar:(NSString *)uid;
 
