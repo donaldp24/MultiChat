@@ -317,9 +317,10 @@
     
     [_stopButton setTitle:@"" forState:UIControlStateNormal];
 
-    [_stopButton setBackgroundImage:[UIImage imageNamed:@"stopbutton"] forState:UIControlStateNormal];
-    [_stopButton setBackgroundImage:[UIImage imageNamed:@"stopbuttonactive"] forState:UIControlStateSelected];
-
+    [_stopButton setBackgroundImage:[UIImage imageNamed:@"stopbuttonactive"] forState:UIControlStateNormal];
+    //[_stopButton setBackgroundImage:[UIImage imageNamed:@"stopbuttonhover"] forState:UIControlStateSelected];
+    [_stopButton setBackgroundImage:[UIImage imageNamed:@"stopbuttonhover"] forState:UIControlStateHighlighted];
+    
     _stopButton.center = CGPointMake(self.center.x, self.center.y - markOffset + 150);
     
     [_stopButton addTarget:self action:@selector(tapStop:) forControlEvents:UIControlEventTouchUpInside];
@@ -347,11 +348,11 @@
         
         if (progress <= 0.01){
             [self showHighLight:NO];
-            [_stopButton setSelected:YES];
+            //[_stopButton setSelected:YES];
         }
         else{
             [self showHighLight:YES];
-            [_stopButton setSelected:NO];
+            //[_stopButton setSelected:NO];
         }
 
     }

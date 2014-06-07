@@ -85,7 +85,8 @@
 		// make the button
 		mediaButton = [[UIButton alloc] initWithFrame:frame];
 		[mediaButton setBackgroundImage:image forState:UIControlStateNormal];
-		
+		[mediaButton setBackgroundImage:[UIImage imageNamed:@"PhotoIconhover"] forState:UIControlStateHighlighted];
+        
 		// button action
 		[mediaButton addTarget:self action:@selector(cameraAction:) forControlEvents:UIControlEventTouchUpInside];
 	}
@@ -109,7 +110,7 @@
 		// make the button
 		voiceButton = [[UIButton alloc] initWithFrame:frame];
 		[voiceButton setBackgroundImage:image forState:UIControlStateNormal];
-		
+		[voiceButton setBackgroundImage:[UIImage imageNamed:@"VoiceIconhover"] forState:UIControlStateHighlighted];
         // Set record start action for UIControlEventTouchDown
         [voiceButton addTarget:self action:@selector(voiceActionStart:) forControlEvents:UIControlEventTouchDown];
 //        // Set record end action for UIControlEventTouchUpInside

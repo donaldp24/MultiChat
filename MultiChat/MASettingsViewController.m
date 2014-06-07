@@ -256,7 +256,7 @@ static CGFloat textFieldsLowerPos = 237.0;
 
 - (IBAction)onTellFriend:(id)sender
 {
-    NSString *string = @"Install MultiChat so we can chat!\nhttp://multichat.com";
+    NSString *string = @"Check out Cycro ! Download it now from http://cycro.me/dl";
     
     UIActivityViewController *activityViewController =
     [[UIActivityViewController alloc] initWithActivityItems:@[string]

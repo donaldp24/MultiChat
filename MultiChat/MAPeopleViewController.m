@@ -63,6 +63,7 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button addTarget:self action:@selector(settingsPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
     [button setBackgroundImage:[UIImage imageNamed:@"settingsicon"] forState:UIControlStateNormal];
+    [button setBackgroundImage:[UIImage imageNamed:@"settingsicon_hover"] forState:UIControlStateHighlighted];
     button.frame = CGRectMake(0 ,0,35,35);
     UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithCustomView:button];
    
@@ -72,6 +73,8 @@
     button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button addTarget:self action:@selector(refreshPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
     [button setBackgroundImage:[UIImage imageNamed:@"refreshicon"] forState:UIControlStateNormal];
+    [button setBackgroundImage:[UIImage imageNamed:@"refreshicon_hover"] forState:UIControlStateHighlighted];
+    
     button.frame = CGRectMake(0 ,0,35,35);
     _refreshButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     

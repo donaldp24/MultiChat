@@ -378,9 +378,9 @@ CGFloat const kJSAvatarSize = 50.0f;
             CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
             
             CGRect imageFrame = CGRectMake(imgX - 3.f,
-                                           kPaddingTop + 3.0f + (self.type == JSBubbleMessageTypeIncoming?kSenderTextHeight:0),
-                                           imageSize.width - kPaddingTop - kMarginTop,
-                                           imageSize.height - kPaddingBottom + 2.f);
+                                           kPaddingTop + (self.type == JSBubbleMessageTypeIncoming?kSenderTextHeight:0),
+                                           imageSize.width,
+                                           imageSize.height);
             
             
             if (self.style == JSBubbleMessageStyleFlat && self.type == JSBubbleMessageTypeOutgoing)
