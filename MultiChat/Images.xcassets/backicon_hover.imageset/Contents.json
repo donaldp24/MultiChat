@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "login_avatar-1.png"
+      "filename" : "backiconhover.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "login_avatar@2x.png"
+      "filename" : "backiconhover@2x.png"
     }
   ],
   "info" : {

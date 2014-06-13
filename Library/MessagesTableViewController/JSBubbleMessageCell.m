@@ -53,7 +53,9 @@
               bubbleStyle:(JSBubbleMessageStyle)bubbleStyle
               avatarStyle:(JSAvatarStyle)avatarStyle
                 mediaType:(JSBubbleMediaType)mediaType
-                timestamp:(BOOL)hasTimestamp;
+                timestamp:(BOOL)hasTimestamp
+               bubbleSize:(float)bubbleSize
+               cellHeight:(float)cellHeight;
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)longPress;
 - (void)handleMenuWillHideNotification:(NSNotification *)notification;
@@ -109,24 +111,26 @@
               avatarStyle:(JSAvatarStyle)avatarStyle
                 mediaType:(JSBubbleMediaType)mediaType
                 timestamp:(BOOL)hasTimestamp
+               bubbleSize:(float)bubbleSize
+               cellHeight:(float)cellHeight
 {
-    CGFloat bubbleY = 0.0f;
+    CGFloat bubbleY = -6.0f;
     CGFloat bubbleX = 0.0f;
     
     if(hasTimestamp) {
         [self configureTimestampLabel];
         bubbleY = 14.0f;
     }
-    
+    bubbleY = cellHeight - bubbleSize - 5;
     CGFloat offsetX = 0.0f;
     
     if(avatarStyle != JSAvatarStyleNone) {
-        offsetX = 4.0f;
+        offsetX = 4.0f + 8;
         bubbleX = kJSAvatarSize;
         CGFloat avatarX = 0.5f;
         
         if(type == JSBubbleMessageTypeOutgoing) {
-            avatarX = (self.contentView.frame.size.width - kJSAvatarSize);
+            avatarX = (self.contentView.frame.size.width - kJSAvatarSize) - 8;
             offsetX = kJSAvatarSize - 4.0f;
         }
         self.avatarImageView = [[UIImageView alloc] initWithFrame:CGRectMake(avatarX,
@@ -143,8 +147,12 @@
     CGRect frame = CGRectMake(bubbleX - offsetX,
                               bubbleY,
                               self.contentView.frame.size.width - bubbleX,
-                              self.contentView.frame.size.height - self.timestampLabel.frame.size.height);
+                              bubbleSize);
+    self.bubbleView.autoresizingMask = UIViewAutoresizingNone;
     
+    if (hasTimestamp) {
+        frame.size.height = frame.size.height - TIMESTAMP_LABEL_HEIGHT;
+    }
     self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
                                                bubbleType:type
                                               bubbleStyle:bubbleStyle
@@ -161,6 +169,8 @@
                mediaType:(JSBubbleMediaType)mediaType
             hasTimestamp:(BOOL)hasTimestamp
          reuseIdentifier:(NSString *)reuseIdentifier
+              bubbleSize:(float)bubbleSize
+              cellHeight:(float)cellHeight
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if(self) {
@@ -170,7 +180,9 @@
                     bubbleStyle:bubbleStyle
                     avatarStyle:avatarStyle
                       mediaType:mediaType
-                      timestamp:hasTimestamp];
+                      timestamp:hasTimestamp
+                     bubbleSize:bubbleSize
+                     cellHeight:cellHeight];
     }
     return self;
 }

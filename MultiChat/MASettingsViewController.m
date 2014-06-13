@@ -46,7 +46,8 @@ static CGFloat textFieldsLowerPos = 237.0;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button addTarget:self action:@selector(backPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
     [button setBackgroundImage:[UIImage imageNamed:@"backicon"] forState:UIControlStateNormal];
-    button.frame = CGRectMake(0 ,0,35,35);
+    [button setBackgroundImage:[UIImage imageNamed:@"backicon_hover"] forState:UIControlStateHighlighted];
+    button.frame = CGRectMake(0 ,0,31,31);
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     self.navigationItem.leftBarButtonItem = backButton;
     
@@ -62,7 +63,20 @@ static CGFloat textFieldsLowerPos = 237.0;
     self.imgAvatar.layer.cornerRadius = self.imgAvatar.frame.size.height / 2;
     self.imgAvatar.layer.masksToBounds = YES;
     self.imgAvatar.layer.borderWidth = 0;
-    self.imgAvatar.image = [MAGlobalData sharedData].avatarImage;
+    
+    NSString *filePath = nil;
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cacheDirectory = [paths objectAtIndex:0];
+    filePath = [cacheDirectory stringByAppendingPathComponent:[MAGlobalData sharedData].avatarImageFileName];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:filePath] == NO)
+        filePath = nil;
+    
+    if (filePath != nil)
+        self.imgAvatar.image = [MAGlobalData sharedData].avatarImage;
+    else
+        self.imgAvatar.image = [UIImage imageNamed:@"login_avatar"];
     
     
     //self.usernameTextField.layer.cornerRadius = 3.0;

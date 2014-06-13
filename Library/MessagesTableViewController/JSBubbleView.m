@@ -42,10 +42,10 @@ CGFloat const kJSAvatarSize = 50.0f;
 
 #define kSenderTextHeight 14.0f
 
-#define kMarginTop 8.0f
-#define kMarginBottom 4.0f
-#define kPaddingTop 12.0f
-#define kPaddingBottom 12.0f
+#define kMarginTop 3.0f
+#define kMarginBottom 3.0f
+#define kPaddingTop 3.0f
+#define kPaddingBottom 3.0f
 #define kBubblePaddingRight 35.0f
 
 @interface JSBubbleView()
@@ -373,12 +373,12 @@ CGFloat const kJSAvatarSize = 50.0f;
         
 		if (recivedImg)
 		{
-            CGSize imageSize = CGSizeMake(40, 40);
+            CGSize imageSize = CGSizeMake(28, 28);
             
             CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
             
             CGRect imageFrame = CGRectMake(imgX - 3.f,
-                                           kPaddingTop + (self.type == JSBubbleMessageTypeIncoming?kSenderTextHeight:0),
+                                           kPaddingTop + (self.type == JSBubbleMessageTypeIncoming?kSenderTextHeight:0) - 2.0f,
                                            imageSize.width,
                                            imageSize.height);
             

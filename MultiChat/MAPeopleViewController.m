@@ -51,7 +51,14 @@
     //self.tblPeople.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.tblPeople.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(20, 20, 20, 20)];
+    UILabel *indicateTextView = [[UILabel alloc] initWithFrame:CGRectMake(43, 16, 100, 25)];
+    [indicateTextView setTextAlignment:NSTextAlignmentCenter];
+    [indicateTextView setTextAlignment:NSTextAlignmentJustified];
+    
+    [indicateTextView setText:@"researching"];
+    
     [self.tblPeople.tableFooterView addSubview:indicator];
+    [self.tblPeople.tableFooterView addSubview:indicateTextView];
     [indicator setColor:[UIColor blackColor]];
     [indicator startAnimating];
     
@@ -64,7 +71,7 @@
     [button addTarget:self action:@selector(settingsPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
     [button setBackgroundImage:[UIImage imageNamed:@"settingsicon"] forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"settingsicon_hover"] forState:UIControlStateHighlighted];
-    button.frame = CGRectMake(0 ,0,35,35);
+    button.frame = CGRectMake(0 ,0,31,31);
     UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithCustomView:button];
    
     self.navigationItem.leftBarButtonItem = settingsButton;
@@ -75,7 +82,7 @@
     [button setBackgroundImage:[UIImage imageNamed:@"refreshicon"] forState:UIControlStateNormal];
     [button setBackgroundImage:[UIImage imageNamed:@"refreshicon_hover"] forState:UIControlStateHighlighted];
     
-    button.frame = CGRectMake(0 ,0,35,35);
+    button.frame = CGRectMake(0 ,0,31,31);
     _refreshButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     
     self.navigationItem.rightBarButtonItem = _refreshButton;

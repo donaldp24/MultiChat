@@ -69,7 +69,7 @@
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
 	[self.view addSubview:self.tableView];
-    
+
     UIEdgeInsets inset = UIEdgeInsetsMake(50, 0, 0, 0);
     self.tableView.contentInset = inset;
 	
@@ -131,7 +131,7 @@
     
     UIButton *sendButton = [self sendButton];
     sendButton.enabled = NO;
-    sendButton.frame = CGRectMake(self.inputToolBarView.frame.size.width - 75.0f, 7.0f, 70.0f, 31.0f);
+    sendButton.frame = CGRectMake(self.inputToolBarView.frame.size.width - 75.0f, 7.0f, 66.0f, 31.0f);
     [sendButton addTarget:self
                    action:@selector(sendPressed:)
          forControlEvents:UIControlEventTouchUpInside];
@@ -142,9 +142,6 @@
 	{
 		// adjust the size of the send button to balance out more with the camera button on the other side.
 		CGRect frame = self.inputToolBarView.sendButton.frame;
-		frame.size.width -= 16;
-		frame.origin.x += 16;
-		self.inputToolBarView.sendButton.frame = frame;
 		
 		// add the camera button
 		[self.inputToolBarView addSubview:mediaButton];
@@ -153,7 +150,6 @@
 		frame = self.inputToolBarView.textView.frame;
 		frame.origin.x += mediaButton.frame.size.width + mediaButton.frame.origin.x;
 		frame.size.width -= mediaButton.frame.size.width + mediaButton.frame.origin.x;
-		frame.size.width += 16;		// from the send button adjustment above
 		self.inputToolBarView.textView.frame = frame;
 	}
 	
@@ -163,11 +159,6 @@
 		// adjust the size of the send button to balance out more with the camera button on the other side.
         
         CGRect frame = self.inputToolBarView.sendButton.frame;
-        if (!kAllowsMedia) {
-            frame.size.width -= 16;
-            frame.origin.x += 16;
-            self.inputToolBarView.sendButton.frame = frame;
-        }
 		
 		// add the voice button
 		[self.inputToolBarView addSubview:voiceButton];
@@ -177,13 +168,11 @@
             frame = self.inputToolBarView.textView.frame;
             frame.origin.x += voiceButton.frame.size.width + voiceButton.frame.origin.x;
             frame.size.width -= voiceButton.frame.size.width + voiceButton.frame.origin.x;
-            frame.size.width += 16;		// from the send button adjustment above
             self.inputToolBarView.textView.frame = frame;
         } else {
             frame = self.inputToolBarView.textView.frame;
             frame.origin.x += voiceButton.frame.size.width + 20;
             frame.size.width -= voiceButton.frame.size.width + voiceButton.frame.origin.x;
-            frame.size.width += 16;		// from the send button adjustment above
             self.inputToolBarView.textView.frame = frame;
         }
 		
@@ -285,6 +274,7 @@
 #pragma - Voice Action
 - (void)voiceActionStart:(id)sender
 {
+    [self.inputToolBarView resignFirstResponder];
     [self.delegate recordStart:sender];
 }
 
@@ -321,13 +311,21 @@
     
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d_%d", type, bubbleStyle, mediaType, hasTimestamp, hasAvatar];
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
-    
+    float bubbleSize;
+    if([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeText ||
+       [self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeSpeech){
+        bubbleSize = [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath] type:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
+    }else{
+        bubbleSize = [JSBubbleView cellHeightForImage:[self.dataSource imageForRowAtIndexPath:indexPath] type:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
+    }
     if(!cell)
         cell = [[JSBubbleMessageCell alloc] initWithBubbleType:type
                                                    bubbleStyle:bubbleStyle
                                                    avatarStyle:(hasAvatar) ? avatarStyle : JSAvatarStyleNone mediaType:mediaType
                                                   hasTimestamp:hasTimestamp
-                                               reuseIdentifier:CellID];
+                                               reuseIdentifier:CellID
+                                                    bubbleSize:bubbleSize
+                cellHeight:[self tableView:tableView heightForRowAtIndexPath:indexPath]];
     
     if(hasTimestamp)
         [cell setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
@@ -405,8 +403,6 @@
         }
 
     }
-    
-    
 }
 
 

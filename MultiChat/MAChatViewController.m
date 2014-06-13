@@ -93,7 +93,8 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button addTarget:self action:@selector(backPressed:) forControlEvents:UIControlEventTouchUpInside]; //adding action
     [button setBackgroundImage:[UIImage imageNamed:@"backicon"] forState:UIControlStateNormal];
-    button.frame = CGRectMake(0 ,0,35,35);
+    [button setBackgroundImage:[UIImage imageNamed:@"backicon_hover"] forState:UIControlStateHighlighted];
+    button.frame = CGRectMake(0 ,0,31,31);
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     self.navigationItem.leftBarButtonItem = backButton;
 }

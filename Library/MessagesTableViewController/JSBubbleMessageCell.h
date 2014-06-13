@@ -51,7 +51,9 @@ typedef enum {
              avatarStyle:(JSAvatarStyle)avatarStyle
                mediaType:(JSBubbleMediaType)mediaType
             hasTimestamp:(BOOL)hasTimestamp
-         reuseIdentifier:(NSString *)reuseIdentifier;
+         reuseIdentifier:(NSString *)reuseIdentifier
+              bubbleSize:(float)bubbleSize
+              cellHeight:(float)cellHeight;
 
 #pragma mark - Message cell
 - (void)setMessage:(NSString *)msg;

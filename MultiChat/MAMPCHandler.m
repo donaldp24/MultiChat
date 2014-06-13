@@ -810,7 +810,7 @@
     [self.theLock lock];
     
     JSMessage *message = [[JSMessage alloc] init];
-    message.text = @"  (((....";
+    message.text = @"  ....";
     message.speech = speech;
     message.sender = [MAGlobalData sharedData].userName;
     message.messageType = JSBubbleMessageTypeOutgoing;

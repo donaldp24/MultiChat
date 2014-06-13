@@ -39,7 +39,7 @@
 #import "UIImage+JSMessagesView.h"
 #import "UIColor+JSMessagesView.h"
 
-#define SEND_BUTTON_WIDTH 78.0f
+#define SEND_BUTTON_WIDTH 66.0f
 
 static id<JSMessageInputViewDelegate> __delegate;
 
@@ -114,7 +114,7 @@ static id<JSMessageInputViewDelegate> __delegate;
     }
     else
     {
-        self.textView = [[JSMessageTextView  alloc] initWithFrame:CGRectMake(8.0f, 6.0f, width, height)];
+        self.textView = [[JSMessageTextView  alloc] initWithFrame:CGRectMake(8.0f, 7.0f, width, height)];
         self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.textView.backgroundColor = [UIColor clearColor];
 
@@ -194,7 +194,7 @@ static id<JSMessageInputViewDelegate> __delegate;
 
 + (CGFloat)textViewLineHeight
 {
-    return 36.0f; // for fontSize 16.0f
+    return 31.0f; // for fontSize 16.0f
 }
 
 + (CGFloat)maxLines

@@ -47,7 +47,7 @@
                     self.jsmessage.image = [UIImage imageWithData:[aDecoder decodeObjectForKey:kMessageImageKey]];
                     break;
                 case JSBubbleMediaTypeSpeech:
-                    self.jsmessage.text = @"....))) ";
+                    self.jsmessage.text = @".... ";
                     self.jsmessage.speech = [aDecoder decodeObjectForKey:kMessageSpeechKey];
                     break;
                 default:
