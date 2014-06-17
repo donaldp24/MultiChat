@@ -26,7 +26,6 @@
 		D36EE406193200D70052213D /* MAUIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D36EE405193200D70052213D /* MAUIManager.m */; };
 		D378EC201940574700D147EC /* stopbuttonactive.png in Resources */ = {isa = PBXBuildFile; fileRef = D378EC1E1940574700D147EC /* stopbuttonactive.png */; };
 		D378EC211940574700D147EC /* stopbuttonactive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D378EC1F1940574700D147EC /* stopbuttonactive@2x.png */; };
-		D3856E1D192F4F430086E9E5 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = D3856E1B192F4F430086E9E5 /* iTunesArtwork */; };
 		D3856E1E192F4F430086E9E5 /* iTunesArtwork@2x in Resources */ = {isa = PBXBuildFile; fileRef = D3856E1C192F4F430086E9E5 /* iTunesArtwork@2x */; };
 		D3A8CB1D1936BEF7000CBC32 /* VoiceIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB1B1936BEF7000CBC32 /* VoiceIcon.png */; };
 		D3A8CB1E1936BEF7000CBC32 /* VoiceIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3A8CB1C1936BEF7000CBC32 /* VoiceIcon@2x.png */; };
@@ -144,7 +143,6 @@
 		D36EE405193200D70052213D /* MAUIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAUIManager.m; sourceTree = "<group>"; };
 		D378EC1E1940574700D147EC /* stopbuttonactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopbuttonactive.png; sourceTree = "<group>"; };
 		D378EC1F1940574700D147EC /* stopbuttonactive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stopbuttonactive@2x.png"; sourceTree = "<group>"; };
-		D3856E1B192F4F430086E9E5 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		D3856E1C192F4F430086E9E5 /* iTunesArtwork@2x */ = {isa = PBXFileReference; lastKnownFileType = file; path = "iTunesArtwork@2x"; sourceTree = "<group>"; };
 		D3A8CB1B1936BEF7000CBC32 /* VoiceIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VoiceIcon.png; sourceTree = "<group>"; };
 		D3A8CB1C1936BEF7000CBC32 /* VoiceIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VoiceIcon@2x.png"; sourceTree = "<group>"; };
@@ -369,7 +367,6 @@
 		D3FC9E56192C14520063A94D /* MultiChat */ = {
 			isa = PBXGroup;
 			children = (
-				D3856E1B192F4F430086E9E5 /* iTunesArtwork */,
 				D3856E1C192F4F430086E9E5 /* iTunesArtwork@2x */,
 				D3FC9E5F192C14520063A94D /* MAAppDelegate.h */,
 				D3FC9E60192C14520063A94D /* MAAppDelegate.m */,
@@ -660,7 +657,6 @@
 				D378EC211940574700D147EC /* stopbuttonactive@2x.png in Resources */,
 				3715F876194159D0006A45C1 /* VoiceIconhover.png in Resources */,
 				D3FE14C6192E095C00563C4E /* bubble-flat-incoming-selected.png in Resources */,
-				D3856E1D192F4F430086E9E5 /* iTunesArtwork in Resources */,
 				3715F86D194157D0006A45C1 /* PhotoIconhover.png in Resources */,
 				D3FE14C7192E095C00563C4E /* bubble-flat-incoming-selected@2x.png in Resources */,
 				D3FE14E5192E095C00563C4E /* send@2x.png in Resources */,
@@ -840,6 +836,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -872,6 +869,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -889,7 +887,7 @@
 				GCC_PREFIX_HEADER = "MultiChat/MultiChat-Prefix.pch";
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = MultiChat;
 				PROVISIONING_PROFILE = "977E5451-34E1-4BD5-8043-E69F31DD4434";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -907,7 +905,7 @@
 				GCC_PREFIX_HEADER = "MultiChat/MultiChat-Prefix.pch";
 				INFOPLIST_FILE = "MultiChat/MultiChat-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = MultiChat;
 				PROVISIONING_PROFILE = "DF19D001-6258-49B1-99C2-FB5013EDAC3E";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

@@ -28,12 +28,12 @@ static MAUIManager *_sharedUIManager = nil;
 
 - (NSString *)appTitle
 {
-    return @"MultiChart";
+    return @"cycro";
 }
 
 - (NSInteger)navbarStyle
 {
-    return UIBarStyleBlackTranslucent;
+    return UIStatusBarStyleDefault;
 }
 
 - (UIColor *)navbarTintColor

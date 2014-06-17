@@ -37,7 +37,8 @@
 #import "UIColor+JSMessagesView.h"
 #import "UIImage+JSMessagesView.h"
 
-#define TIMESTAMP_LABEL_HEIGHT 14.5f
+#define TIMESTAMP_LABEL_HEIGHT_INCOMMING 20.0f
+#define TIMESTAMP_LABEL_HEIGHT_OUTGOING 15.0f
 
 @interface JSBubbleMessageCell()
 
@@ -93,7 +94,7 @@
     self.timestampLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
                                                                     4.0f,
                                                                     self.bounds.size.width,
-                                                                    TIMESTAMP_LABEL_HEIGHT)];
+                                                                    TIMESTAMP_LABEL_HEIGHT_OUTGOING)];
     self.timestampLabel.autoresizingMask =  UIViewAutoresizingFlexibleWidth;
     self.timestampLabel.backgroundColor = [UIColor clearColor];
     self.timestampLabel.textAlignment = NSTextAlignmentCenter;
@@ -119,7 +120,10 @@
     
     if(hasTimestamp) {
         [self configureTimestampLabel];
-        bubbleY = 14.0f;
+        if (type == JSBubbleMessageTypeOutgoing)
+            bubbleY = 16.0f;
+        else
+            bubbleY = 20.f;
     }
     bubbleY = cellHeight - bubbleSize - 5;
     CGFloat offsetX = 0.0f;
@@ -150,9 +154,9 @@
                               bubbleSize);
     self.bubbleView.autoresizingMask = UIViewAutoresizingNone;
     
-    if (hasTimestamp) {
-        frame.size.height = frame.size.height - TIMESTAMP_LABEL_HEIGHT;
-    }
+    //if (hasTimestamp) {
+    //    frame.size.height = frame.size.height - TIMESTAMP_LABEL_HEIGHT;
+    //}
     self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
                                                bubbleType:type
                                               bubbleStyle:bubbleStyle
@@ -278,23 +282,38 @@
 
 + (CGFloat)neededHeightForText:(NSString *)bubbleViewText timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar type:(int)type
 {
-    CGFloat timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT : 0.0f;
+    CGFloat timestampHeight = 0.0f;
+    if (type == JSBubbleMessageTypeOutgoing)
+        timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT_OUTGOING : 0.0f;
+    else
+        timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT_INCOMMING : 0.0f;
+    
     CGFloat avatarHeight = (hasAvatar) ? kJSAvatarSize : 0.0f;
     return MAX(avatarHeight, [JSBubbleView cellHeightForText:bubbleViewText type:type]) + timestampHeight;
 }
 
 + (CGFloat)neededHeightForImage:(UIImage *)bubbleViewImage timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar type:(int)type
 {
-    CGFloat timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT : 0.0f;
+    CGFloat timestampHeight = 0.0f;
+    if (type == JSBubbleMessageTypeOutgoing)
+        timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT_OUTGOING : 0.0f;
+    else
+        timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT_INCOMMING : 0.0f;
+    
     CGFloat avatarHeight = (hasAvatar) ? kJSAvatarSize : 0.0f;
     return MAX(avatarHeight, [JSBubbleView cellHeightForImage:bubbleViewImage type:type]) + timestampHeight;
 }
 
 + (CGFloat)neededHeightForSpeech:(NSData *)data timestamp:(BOOL)hasTimestamp avatar:(BOOL)hasAvatar type:(int)type
 {
-    CGFloat timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT : 0.0f;
+    CGFloat timestampHeight = 0.0f;
+    if (type == JSBubbleMessageTypeOutgoing)
+        timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT_OUTGOING : 0.0f;
+    else
+        timestampHeight = (hasTimestamp) ? TIMESTAMP_LABEL_HEIGHT_INCOMMING : 0.0f;
+    
     CGFloat avatarHeight = (hasAvatar) ? kJSAvatarSize : 0.0f;
-    return MAX(avatarHeight, [JSBubbleView cellHeightForText:@" " type:type]) + timestampHeight;
+    return MAX(avatarHeight, [JSBubbleView cellHeightForSpeech:type]) + timestampHeight;
 }
 
 #pragma mark - Copying

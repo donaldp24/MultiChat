@@ -87,8 +87,6 @@
     
     self.navigationItem.rightBarButtonItem = _refreshButton;
     
-    [self setNeedsStatusBarAppearanceUpdate];
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -134,8 +132,6 @@
     [layer addSublayer:border];
     
     
-    
-    
     self.appDelegate.mpcHandler.delegate = self;
     
     
@@ -169,12 +165,6 @@
     
     [_timer invalidate];
 }
-
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
-
-#pragma mark - Actions
 
 - (void)settingsPressed:(id)sender
 {
@@ -381,5 +371,4 @@ UIImage* rotate(UIImage* src, int degree)
     UIGraphicsEndImageContext();
     return image;
 }
-
 @end

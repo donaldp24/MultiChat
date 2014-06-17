@@ -78,7 +78,7 @@
 	{
 		// set up the image and button frame
 		UIImage* image = [UIImage imageNamed:@"PhotoIcon"];
-		CGRect frame = CGRectMake(4, 0, image.size.width, image.size.height);
+		CGRect frame = CGRectMake(10, 0, image.size.width, image.size.height);
 		CGFloat yHeight = (INPUT_HEIGHT - frame.size.height) / 2.0f;
 		frame.origin.y = yHeight;
 		
@@ -312,9 +312,10 @@
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d_%d", type, bubbleStyle, mediaType, hasTimestamp, hasAvatar];
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     float bubbleSize;
-    if([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeText ||
-       [self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeSpeech){
+    if([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeText) {
         bubbleSize = [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath] type:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
+    } else if ([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeSpeech){
+        bubbleSize = [JSBubbleView cellHeightForSpeech:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
     }else{
         bubbleSize = [JSBubbleView cellHeightForImage:[self.dataSource imageForRowAtIndexPath:indexPath] type:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
     }
@@ -358,13 +359,17 @@
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeText ||
-       [self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeSpeech){
+    if([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeText) {
         return [JSBubbleMessageCell neededHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]
                                               timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
                                                  avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]
                                                    type:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
-    }else{
+    } else if ([self.delegate messageMediaTypeForRowAtIndexPath:indexPath] == JSBubbleMediaTypeSpeech) {
+        return [JSBubbleMessageCell neededHeightForSpeech:nil
+                                              timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
+                                                 avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]
+                                                   type:[self.delegate messageTypeForRowAtIndexPath:indexPath]];
+    } else {
         return [JSBubbleMessageCell neededHeightForImage:[self.dataSource imageForRowAtIndexPath:indexPath]
                                                timestamp:[self shouldHaveTimestampForRowAtIndexPath:indexPath]
                                                   avatar:[self shouldHaveAvatarForRowAtIndexPath:indexPath]
